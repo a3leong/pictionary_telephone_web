@@ -1,59 +1,13 @@
+socketpool = require('./socketpool');
+gametimer = require('./gametimer');
+
 module.exports = {
-  SocketPool: function(socketArray) {
-    this.socketPool = socketArray;
-
-    this.addSocket = function(ws) {
-      this.socketPool.push(ws);
-    }
-
-    this.closeSockets = function(ws) {
-      for(ws in this.socketPool) {
-        ws.close();
-      }
-    }
-
-    this.broadcast = function(message) {
-      for(var i=0;i<this.socketPool.length;i++) {
-        this.socketPool[i].send(message);
-      };
-    }
-
-    this.socketCount = function() {
-      return this.socketPool.length;
-    };
-  },
-
-  GameTimer: function(socketPool) {
-    this.socketPool = socketPool;
-
-    this.sendRemainingTime = function(remainingTime) {
-      this.socketPool.broadcast(JSON.stringify({
-        type: 'timer',
-        data: { time_left: remainingTime }
-      }));
-    };
-
-    this.timerCallback = function(timeInSeconds, callback, context, broadcast=true) {
-      var thisRef = this; // To hold old self
-      var remainingTime = timeInSeconds;
-
-      var interval_id = setInterval(function(){
-        console.log(remainingTime);
-        if(--remainingTime <= 0) {
-          clearInterval(interval_id);
-          callback(context);
-        }
-        if(broadcast) { thisRef.sendRemainingTime(remainingTime); }
-      },1000);
-    };
-  },
-
   GameInstance: function(gameId, playerSockets = []) {
     this.gameRunning = false;
     this.roundNumber = 0;
     this.gameId = gameId;
-    this.playerSockets = new module.exports.SocketPool(playerSockets);
-    this.GameTimer = new module.exports.GameTimer(this.playerSockets);
+    this.playerSockets = new socketpool.SocketPool(playerSockets);
+    this.GameTimer = new gametimer.GameTimer(this.playerSockets);
     this.drawRoundTime = 30;
     this.phraseRoundTime = 10;
     this.imageData = [];

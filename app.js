@@ -6,7 +6,7 @@ var server = require('http').createServer()
   , express = require('express')
   , app = express()
   , port = 3000
-  , services = require('./services');
+  , gameInstance = require('./node_classes/gameinstance');
 
 app.use("/public", express.static(__dirname + "/public"));
 
@@ -49,11 +49,11 @@ wss.on('connection', function connection(ws) {
 
   ws.on('message', function incoming(message) {
     console.log(message);
-    handle_message(message, this);
+    handleMessage(message, this);
   });
 });
 
-function handle_message(message, playerSocket) {
+function handleMessage(message, playerSocket) {
   console.log(message);
   messageObject = JSON.parse(message);
   switch(messageObject.type) {
@@ -65,6 +65,7 @@ function handle_message(message, playerSocket) {
       break;
     case 'startGameInstance':
       startGame(messageObject.data);
+      break;
     case 'roundDataSend':
       recieveRoundData(messageObject.data);
       break;
@@ -82,7 +83,7 @@ function createGame(data, playerSocket) {
   while(gameInstanceDict[id] != null && gameInstanceDict[id] != undefined) {
     id = makeid(); // Since we expect low amount of users, we just regen an id until we getConfig a free one
   }
-  gameInstanceDict[id] = new services.GameInstance(id, [playerSocket]);
+  gameInstanceDict[id] = new gameInstance.GameInstance(id, [playerSocket]);
   playerSocket.send(JSON.stringify(gameInstanceDict[id].getConfig()));
 }
 
