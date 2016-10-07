@@ -1,0 +1,29 @@
+Tasklist:
+
+
+Aaron
+- Standardize and write documentation for payload format (object attribute names and expected data)
+- Require/support custom names for players (people should be able to see who drew/wrote what)
+- Create player class (websocket, playerid)
+- Create socketpool support for player class (array of player classes now and also support individual message sending)
+- Create phrase data class
+- Create canvas draw data class
+- Figure out canvas data transport method
+- Assign websocket instances to array entries
+- Handle a DC
+- Handle DC before gamestart (auto-boot player)
+- Add kick functionality for host
+
+
+Wes
+- Create message handler
+- Create DOM handler
+- Create a single page application
+  - Create setup view (kick players, remove)
+  - Create phrase view (input text chars)
+  - Create draw view (html5 canvas)- 2 line thicknesses and eraser (no colors cause thats too easy)
+  - Create results view
+-Create some kind of system to display results (each person gets their own set back like in the original game?)
+    -> Flipbook?
+- Make it look pretty
+- Extra: pdf pages save option?
