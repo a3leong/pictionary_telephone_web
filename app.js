@@ -15,7 +15,7 @@ app.use("/public", express.static(__dirname + "/public"));
 //   // res.send({ msg: "hello" });
 // });
 
-var game_instance_dict = {};
+var gameInstanceDict = {};
 
 server.on('request', app);
 server.listen(port, function () { console.log('Listening on ' + server.address().port) });
@@ -39,7 +39,7 @@ wss.on('connection', function connection(ws) {
   //   ws.send(JSON.stringify({
   //     type: "socket_connection",
   //     status: "error",
-  //     err_msg: "Game has already started!"
+  //     errMsg: "Game has already started!"
   //   }));
   // }
 
@@ -53,72 +53,72 @@ wss.on('connection', function connection(ws) {
   });
 });
 
-function handle_message(message, player_socket) {
+function handle_message(message, playerSocket) {
   console.log(message);
-  message_object = JSON.parse(message);
-  switch(message_object.type) {
-    case 'create_game_instance':
-      create_game(message_object.data, player_socket);
+  messageObject = JSON.parse(message);
+  switch(messageObject.type) {
+    case 'createGameInstance':
+      createGame(messageObject.data, playerSocket);
       break;
-    case 'join_game_instance':
-      join_game(message_object.data, player_socket);
+    case 'joinGameInstance':
+      joinGame(messageObject.data, playerSocket);
       break;
-    case 'start_game_instance':
-      start_game(message_object.data);
-    case 'round_data_send':
-      recieve_round_data(message_object.data);
+    case 'startGameInstance':
+      startGame(messageObject.data);
+    case 'roundDataSend':
+      recieveRoundData(messageObject.data);
       break;
-    case 'update_config_option':
-      update_config_option(message_object.data);
+    case 'updateConfigOption':
+      updateConfigOption(messageObject.data);
       break;
     default:
       // TODO throw later
-      console.log("Error: Message type '" + message_object.type +"' not expected");
+      console.log("Error: Message type '" + messageObject.type +"' not expected");
   }
 }
 
-function create_game(data, player_socket) {
+function createGame(data, playerSocket) {
   var id = makeid();
-  while(game_instance_dict[id] != null && game_instance_dict[id] != undefined) {
-    id = makeid(); // Since we expect low amount of users, we just regen an id until we get a free one
+  while(gameInstanceDict[id] != null && gameInstanceDict[id] != undefined) {
+    id = makeid(); // Since we expect low amount of users, we just regen an id until we getConfig a free one
   }
-  game_instance_dict[id] = new services.game_instance(id, [player_socket]);
-  player_socket.send(JSON.stringify(game_instance_dict[id].get_config()));
+  gameInstanceDict[id] = new services.GameInstance(id, [playerSocket]);
+  playerSocket.send(JSON.stringify(gameInstanceDict[id].getConfig()));
 }
 
-function join_game(data, player_socket) {
+function joinGame(data, playerSocket) {
   console.log('join client');
-  console.log(data.game_id);
-  if(game_instance_dict[data.game_id]) {
-    game_instance_dict[data.game_id].add_player(player_socket);
+  console.log(data.gameId);
+  if(gameInstanceDict[data.gameId]) {
+    gameInstanceDict[data.gameId].addPlayer(playerSocket);
   } else {
-    send(JSON.stringify(generate_error_msg("Could not find game client")));
+    send(JSON.stringify(generateErrorMessage("Could not find game client")));
   }
 }
 
-function start_game(data) {
+function startGame(data) {
   console.log("Start game");
-  console.log(data.game_id);
-  if(game_instance_dict[data.game_id]) {
-    game_instance_dict[data.game_id].start_game();
+  console.log(data.gameId);
+  if(gameInstanceDict[data.gameId]) {
+    gameInstanceDict[data.gameId].startGame();
   } else {
-    send(JSON.stringify(generate_error_msg("Could not find game client")));
+    send(JSON.stringify(generateErrorMessage("Could not find game client")));
   }
 }
 
-function recieve_round_data(data) {
-  console.log('recieve_round_data');
+function recieveRoundData(data) {
+  console.log('recieveRoundData');
 }
 
-function update_config_option(data) {
-  console.log('update_config_option');
+function updateConfigOption(data) {
+  console.log('updateConfigOption');
 }
 
-function generate_error_msg(err_msg) {
+function generateErrorMessage(errMsg) {
   return {
     type: "error",
     data: {
-      err_msg: err_msg
+      errMsg: errMsg
     }
   };
 }

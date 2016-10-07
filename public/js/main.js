@@ -9,12 +9,12 @@ function event_handler() {
   this.handle_event = function(event) {
     event_object = JSON.parse(event);
     switch(event_object.type) {
-      case 'game_state':
+      case 'gamestate':
         this.handle_gamestate(event_object.data);
         break;
-      case 'socket_connection':
-        this.handle_socket_connection(event_object.data);
-        break;
+      // case 'socket_connection':
+      //   this.handle_socket_connection(event_object.data);
+      //   break;
       default:
         console.log("Unidentified payload type received");
         throw ("Unidentified payload type received");
@@ -76,20 +76,20 @@ ws.onmessage = function(event) {
   var received_msg = event.data;
   var obj = JSON.parse(received_msg);
   // alert("Message is recieved: " + received_msg);
-  document.getElementById("game_id_input").value = obj.data.game_id;
+  document.getElementById("game_id_input").value = obj.data.gameId;
   document.getElementById("response").innerHTML = received_msg;
 };
 
 function createGame() {
-  ws.send(JSON.stringify({type: 'create_game_instance'}));
+  ws.send(JSON.stringify({type: 'createGameInstance'}));
 }
 
 function joinGame() {
   var game_id = document.getElementById("game_id_input").value;
-  ws.send(JSON.stringify({type: 'join_game_instance', data:{game_id:game_id}}));
+  ws.send(JSON.stringify({type: 'joinGameInstance', data:{gameId:game_id}}));
 }
 
 function startGame() {
   var game_id = document.getElementById("game_id_input").value;
-  ws.send(JSON.stringify({type: 'start_game_instance', data:{game_id:game_id}}));
+  ws.send(JSON.stringify({type: 'startGameInstance', data:{gameId:game_id}}));
 }

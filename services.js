@@ -1,166 +1,161 @@
 module.exports = {
-  service_test: function() {
-    return ("Success");
-  },
+  SocketPool: function(socketArray) {
+    this.socketPool = socketArray;
 
-
-  socket_pool: function(socket_array) {
-    this.socket_pool = socket_array;
-
-    this.add_socket = function(ws) {
-      this.socket_pool.push(ws);
+    this.addSocket = function(ws) {
+      this.socketPool.push(ws);
     }
 
-    this.close_sockets = function(ws) {
-      for(ws in this.socket_pool) {
+    this.closeSockets = function(ws) {
+      for(ws in this.socketPool) {
         ws.close();
       }
     }
 
     this.broadcast = function(message) {
-      for(var i=0;i<this.socket_pool.length;i++) {
-        this.socket_pool[i].send(message);
+      for(var i=0;i<this.socketPool.length;i++) {
+        this.socketPool[i].send(message);
       };
     }
 
-    this.socket_count = function() {
-      return this.socket_pool.length;
+    this.socketCount = function() {
+      return this.socketPool.length;
     };
   },
 
-  game_timer: function(socket_pool) {
-    this.socket_pool = socket_pool;
+  GameTimer: function(socketPool) {
+    this.socketPool = socketPool;
 
-    this.send_remaining_time = function(remaining_time) {
-      this.socket_pool.broadcast(JSON.stringify({
+    this.sendRemainingTime = function(remainingTime) {
+      this.socketPool.broadcast(JSON.stringify({
         type: 'timer',
-        data: { time_left: remaining_time }
+        data: { time_left: remainingTime }
       }));
     };
 
-    this.timer_callback = function(time_in_seconds, callback, context, broadcast=true) {
-      var _this = this; // To hold old self
-      var remaining_time = time_in_seconds;
+    this.timerCallback = function(timeInSeconds, callback, context, broadcast=true) {
+      var thisRef = this; // To hold old self
+      var remainingTime = timeInSeconds;
 
       var interval_id = setInterval(function(){
-        console.log(remaining_time);
-        if(--remaining_time <= 0) {
+        console.log(remainingTime);
+        if(--remainingTime <= 0) {
           clearInterval(interval_id);
           callback(context);
         }
-        if(broadcast) { _this.send_remaining_time(remaining_time); }
+        if(broadcast) { thisRef.sendRemainingTime(remainingTime); }
       },1000);
     };
   },
 
-  game_instance: function(game_id, player_sockets = []) {
-    this.game_running = false;
-    this.round_number = 0;
-    this.game_id = game_id;
-    this.player_sockets = new module.exports.socket_pool(player_sockets);
-    this.game_timer = new module.exports.game_timer(this.player_sockets);
-    this.draw_round_time = 30;
-    this.phrase_round_time = 10;
-    this.image_data = [];
-    this.phrase_data = [];  // TODO handle ordering on recieving
+  GameInstance: function(gameId, playerSockets = []) {
+    this.gameRunning = false;
+    this.roundNumber = 0;
+    this.gameId = gameId;
+    this.playerSockets = new module.exports.SocketPool(playerSockets);
+    this.GameTimer = new module.exports.GameTimer(this.playerSockets);
+    this.drawRoundTime = 30;
+    this.phraseRoundTime = 10;
+    this.imageData = [];
+    this.phraseData = [];  // TODO handle ordering on recieving
     this.context = this;
 
-    this.get_config = function() {
-      // player_count is the players id as well if it hasn't been set yet
+    this.getConfig = function() {
+      // playerCount is the players id as well if it hasn't been set yet
       return {
         type: 'gamestate',
         data:{
           state: 'config',
-          game_id: this.game_id,
-          player_count: this.get_player_count(),
-          draw_round_time: this.draw_round_time,
-          phrase_round_time: this.phrase_round_time
+          gameId: this.gameId,
+          playerCount: this.getPlayerCount(),
+          drawRoundTime: this.drawRoundTime,
+          phraseRoundTime: this.phraseRoundTime
         } 
       };      
     }
 
-    this.add_player = function(ws) {
-      this.player_sockets.add_socket(ws);
+    this.addPlayer = function(ws) {
+      this.playerSockets.addSocket(ws);
       // Send all data because new player needs info, simpler to just resend to all
-      this.send_message(JSON.stringify(this.get_config()));
+      this.sendMessage(JSON.stringify(this.getConfig()));
     };
 
-    this.get_player_count = function() {
-      return this.player_sockets.socket_count();
+    this.getPlayerCount = function() {
+      return this.playerSockets.socketCount();
     };
 
-    this.send_message = function(message) {
-      this.player_sockets.broadcast(message);
+    this.sendMessage = function(message) {
+      this.playerSockets.broadcast(message);
     };
 
-    this.send_gamestate = function(state, data = null) {
-        this.send_message(JSON.stringify({
+    this.sendGamestate = function(state, data = null) {
+        this.sendMessage(JSON.stringify({
           type: "gamestate",
           data: data
         }));
     };
 
-    this.send_setup_info = function() {
-        this.send_message(JSON.stringify({
+    this.sendSetupInfo = function() {
+        this.sendMessage(JSON.stringify({
           type: "gamestate",
           state: "config",
-          draw_round_time: this.draw_round_time,
-          phrase_round_time: this.phrase_round_time
+          drawRoundTime: this.drawRoundTime,
+          phraseRoundTime: this.phraseRoundTime
         }));
     };
 
-    this.is_game_over = function() {
-      if(this.round_number < this.get_player_count()) {
+    this.isGameOver = function() {
+      if(this.roundNumber < this.getPlayerCount()) {
         return false;
       } else {
         return true;
       }
     }
 
-    this.start_game = function(){
-      this.game_running = true;
-      this.update_game(this.context);
+    this.startGame = function(){
+      this.gameRunning = true;
+      this.updateGame(this.context);
     };
 
-    this.update_game = function(context){
-      if(context.is_game_over()) {
-        console.log(context.round_number);
-        context.game_running = false;
-        context.send_results(context);
+    this.updateGame = function(context){
+      if(context.isGameOver()) {
+        console.log(context.roundNumber);
+        context.gameRunning = false;
+        context.sendResults(context);
       }
       else {
-        if((context.round_number++)%2==0){
-          context.start_phrase_round(context);
+        if((context.roundNumber++)%2==0){
+          context.startPhraseRound(context);
         } else {
-          context.start_draw_round(context);
+          context.startDrawRound(context);
         }
       }
     }
 
-    this.start_phrase_round = function(context){
+    this.startPhraseRound = function(context){
       // message.send(JSON.stringify({
       //   type: "gamestate",
       //   data: {state: "phrase"}
       // }));
-      this.game_timer.timer_callback(this.phrase_round_time, this.update_game, context, broadcast=true);
+      this.GameTimer.timerCallback(this.phraseRoundTime, this.updateGame, context, broadcast=true);
     };
 
-    this.start_draw_round = function(context){
+    this.startDrawRound = function(context){
       // message.send(JSON.stringify({
       //   type: "gamestate",
       //   data: {state: "draw"}
       // }));
-      this.game_timer.timer_callback(this.draw_round_time, this.update_game, context, broadcast=true);
+      this.GameTimer.timerCallback(this.drawRoundTime, this.updateGame, context, broadcast=true);
     };
 
-    this.send_results = function(context){
+    this.sendResults = function(context){
       console.log("Game over");
       // message.send(JSON.stringify({
       //   type: "gamestate",
       //   state: "results"
       // }));
       // // TODO: fix later
-      // this.send_message(this.image_data);
+      // this.sendMessage(this.imageData);
     };
   }
 }
