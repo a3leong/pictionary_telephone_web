@@ -12,6 +12,7 @@ JSON object containing necessary fields based on the type of message sent/reciev
 
 # What's done so far
 -Classes have been written for NodeJS to support handling gamelogic
+-main.js in the public/js directory has a message handling function written
 -Players can create rooms and join them
 -Players can start games and the timing system works.
 
