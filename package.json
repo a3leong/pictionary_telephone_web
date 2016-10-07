@@ -1,0 +1,24 @@
+{
+  "name": "pictionary_telephone",
+  "version": "0.5.0",
+  "description": "In development",
+  "main": "app.js",
+  "dependencies": {
+    "express": "^4.14.0",
+    "ws": "^1.1.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/a3leong/pictionary_telephone_web.git"
+  },
+  "author": "Aaron Leong",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/a3leong/pictionary_telephone_web/issues"
+  },
+  "homepage": "https://github.com/a3leong/pictionary_telephone_web#readme"
+}
