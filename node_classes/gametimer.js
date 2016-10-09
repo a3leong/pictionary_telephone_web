@@ -5,7 +5,7 @@ module.exports = {
     this.sendRemainingTime = function(remainingTime) {
       this.socketPool.broadcast(JSON.stringify({
         type: 'timer',
-        data: { time_left: remainingTime }
+        data: { timeLeft: remainingTime }
       }));
     };
 

@@ -1,0 +1,87 @@
+// Server to client:
+{
+    type: 'config' | 'timer' | 'error' | 'expectData' \
+        | 'startFirstPhrase' | 'startPhrase' | 'startDraw' | 'startEnd',        // String value containing type of message expected
+    data: {}  // Data object depends on context
+}
+
+
+// Data object based on type
+config:   // Used to send config data, resends to all players everytime config data is updated
+{
+    gameId: this.gameId,
+    playerCount: this.getPlayerCount(),
+    drawRoundTime: this.drawRoundTime,
+    phraseRoundTime: this.phraseRoundTime
+}
+
+
+
+// We could also potentially send roundNumber/totalRounds here if that would be helpful info for players
+gamestatus:
+{
+    status: 'firstPhrase' | 'phrase' | 'draw' | 'end' | 'expectData',  // expectData means waiting for clients to send canvas/word data
+    currentRound: 1, // Optional
+    totalRounds:  5  // Optional
+}
+
+timer:    // Sends time left in round data
+{
+    timeLeft: 30 // Time left in seconds
+}
+
+
+
+
+
+
+// Client to Server:
+{
+    type: 'createGameInstance' | 'joinGameInstance' | 'startGameInstance' \  // String value containing type of message expected
+          | 'roundDataSend' | 'updateConfigOption',             
+    data: { }  // Data object depends on context
+}
+
+
+// Data object based on type
+createGameInstance:
+{
+    gameId: 'game_id',
+    playerId: 'player_id'     // Nickname used by player
+}
+
+joinGameInstance:
+{
+    gameId: 'game_id',
+    playerId: 'player_id'
+}
+
+kickPlayer:
+{
+    gameId: 'game_id',
+    playerId: 'player_id'
+}
+
+startGameInstance:
+{
+    gameId: 'game_id'
+}
+
+roundDataSend:
+{
+    roundType: 'draw' | 'phrase',
+    playerId: 'player_id',
+    canvasData: 'base64_url_encode_canvas_data'
+}
+
+updateConfigOption:
+{
+    gameId: 'game_id',
+    drawRoundTime: 30,   // Any int
+    phraseRoundTime: 10  // Any int
+}
+/**
+    createGameInstance
+
+
+**/
