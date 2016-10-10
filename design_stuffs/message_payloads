@@ -67,11 +67,18 @@ startGameInstance:
     gameId: 'game_id'
 }
 
-roundDataSend:
+phraseDataSend:
 {
-    roundType: 'draw' | 'phrase',
+    gameId: 'game_id',
     playerId: 'player_id',
-    canvasData: 'base64_url_encode_canvas_data'
+    phrase: 'string'
+}
+
+drawDataSend:
+{
+    gameId: 'game_id',
+    playerId: 'player_id',
+    canvas: 'base64_url_encode_canvas_data'
 }
 
 updateConfigOption:

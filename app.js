@@ -6,7 +6,7 @@ var server = require('http').createServer()
   , express = require('express')
   , app = express()
   , port = 3000
-  , gameInstance = require('./node_classes/gameinstance');
+  , GameInstance = require('./node_classes/gameinstance');
 
 app.use("/public", express.static(__dirname + "/public"));
 
@@ -83,7 +83,7 @@ function createGame(data, playerSocket) {
   while(gameInstanceDict[id] != null && gameInstanceDict[id] != undefined) {
     id = makeid(); // Since we expect low amount of users, we just regen an id until we getConfig a free one
   }
-  gameInstanceDict[id] = new gameInstance.GameInstance(id, [playerSocket]);
+  gameInstanceDict[id] = new GameInstance(id, [playerSocket]);
   playerSocket.send(JSON.stringify(gameInstanceDict[id].getConfig()));
 }
 
