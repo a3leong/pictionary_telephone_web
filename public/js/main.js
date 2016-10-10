@@ -81,7 +81,8 @@ ws.onmessage = function(event) {
 };
 
 function createGame() {
-  ws.send(JSON.stringify({type: 'createGameInstance'}));
+  var pid = document.getElementById('game_name_input').value;
+  ws.send(JSON.stringify({type: 'createGameInstance', data:{playerId: pid}}));
 }
 
 function joinGame() {

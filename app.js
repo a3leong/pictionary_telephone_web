@@ -83,15 +83,15 @@ function createGame(data, playerSocket) {
   while(gameInstanceDict[id] != null && gameInstanceDict[id] != undefined) {
     id = makeid(); // Since we expect low amount of users, we just regen an id until we getConfig a free one
   }
-  gameInstanceDict[id] = new GameInstance(id, [playerSocket]);
+  gameInstanceDict[id] = new GameInstance(id);
+  gameInstanceDict[id].addPlayer(playerSocket, data.playerId);
   playerSocket.send(JSON.stringify(gameInstanceDict[id].getConfig()));
 }
 
 function joinGame(data, playerSocket) {
   console.log('join client');
-  console.log(data.gameId);
   if(gameInstanceDict[data.gameId]) {
-    gameInstanceDict[data.gameId].addPlayer(playerSocket);
+    gameInstanceDict[data.gameId].addPlayer(playerSocket, data.playerId); // TODO real name
   } else {
     send(JSON.stringify(generateErrorMessage("Could not find game client")));
   }

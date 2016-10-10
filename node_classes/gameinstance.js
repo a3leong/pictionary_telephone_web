@@ -1,12 +1,13 @@
-SocketPool = require('./socketpool');
+PlayerPool = require('./playerpool');
 GameTimer = require('./gametimer');
+ClientInfo = require('./clientinfo');
 
-function GameInstance(gameId, playerSockets = []) {
+function GameInstance(gameId, sockets = []) {
     this.gameRunning = false;
     this.roundNumber = 0;
     this.gameId = gameId;
-    this.playerSockets = new SocketPool(playerSockets);
-    this.GameTimer = new GameTimer(this.playerSockets);
+    this.playerPool = new PlayerPool();
+    this.GameTimer = new GameTimer(this.playerPool);
     this.drawRoundTime = 30;
     this.phraseRoundTime = 10;
     this.imageData = [];
@@ -29,18 +30,19 @@ GameInstance.prototype.getConfig = function() {
   };      
 };
 
-GameInstance.prototype.addPlayer = function(ws) {
-  this.playerSockets.addSocket(ws);
+GameInstance.prototype.addPlayer = function(ws, playerId) {
+  this.playerPool.addPlayer(new ClientInfo(ws, playerId));
+
   // Send all data because new player needs info, simpler to just resend to all
   this.sendMessage(JSON.stringify(this.getConfig()));
 };
 
 GameInstance.prototype.getPlayerCount = function() {
-  return this.playerSockets.socketCount();
+  return this.playerPool.playerCount();
 };
 
 GameInstance.prototype.sendMessage = function(message) {
-  this.playerSockets.broadcast(message);
+  this.playerPool.broadcast(message);
 };
 
 GameInstance.prototype.sendGamestate = function(state, data = null) {
@@ -65,7 +67,7 @@ GameInstance.prototype.isGameOver = function() {
   } else {
     return true;
   }
-}
+};
 
 GameInstance.prototype.startGame = function(){
   this.gameRunning = true;
@@ -74,7 +76,6 @@ GameInstance.prototype.startGame = function(){
 
 GameInstance.prototype.updateGame = function(context){
   if(context.isGameOver()) {
-    console.log(context.roundNumber);
     context.gameRunning = false;
     context.sendResults(context);
   }
@@ -85,7 +86,7 @@ GameInstance.prototype.updateGame = function(context){
       context.startDrawRound(context);
     }
   }
-}
+};
 
 GameInstance.prototype.startPhraseRound = function(context){
   // message.send(JSON.stringify({

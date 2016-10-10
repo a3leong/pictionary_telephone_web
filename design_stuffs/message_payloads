@@ -46,7 +46,6 @@ timer:    // Sends time left in round data
 // Data object based on type
 createGameInstance:
 {
-    gameId: 'game_id',
     playerId: 'player_id'     // Nickname used by player
 }
 
