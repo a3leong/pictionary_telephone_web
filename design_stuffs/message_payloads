@@ -1,7 +1,6 @@
 // Server to client:
 {
-    type: 'config' | 'timer' | 'error' | 'expectData' \
-        | 'startFirstPhrase' | 'startPhrase' | 'startDraw' | 'startEnd',        // String value containing type of message expected
+    type: 'config' | 'timer' | 'error' | 'gamestatus' | 'playerBook',        // String value containing type of message expected
     data: {}  // Data object depends on context
 }
 
@@ -17,7 +16,7 @@ config:   // Used to send config data, resends to all players everytime config d
 }
 
 
-
+// Used to tell client to load a particular view
 // We could also potentially send roundNumber/totalRounds here if that would be helpful info for players
 gamestatus:
 {
@@ -26,9 +25,23 @@ gamestatus:
     totalRounds:  5  // Optional
 }
 
+// Players resulting set of images/phrases created from their phrase
+playerBook:
+{
+    playerId: "player_id",
+    book: // TODO: figure out format for this
+}
+
 timer:    // Sends time left in round data
 {
     timeLeft: 30 // Time left in seconds
+}
+
+
+
+error:
+{
+    errmsg: "error_msg"
 }
 
 
