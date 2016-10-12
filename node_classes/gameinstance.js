@@ -15,15 +15,14 @@ function GameInstance(gameId, sockets = []) {
     this.context = this;
 };
 
-
 GameInstance.prototype.getConfig = function() {
   // playerCount is the players id as well if it hasn't been set yet
   return {
-    type: 'gamestate',
+    type: 'config',
     data:{
-      state: 'config',
       gameId: this.gameId,
       playerCount: this.getPlayerCount(),
+      playerIds: this.getPlayerIds(),
       drawRoundTime: this.drawRoundTime,
       phraseRoundTime: this.phraseRoundTime
     } 
@@ -31,10 +30,9 @@ GameInstance.prototype.getConfig = function() {
 };
 
 GameInstance.prototype.addPlayer = function(ws, playerId) {
+  // TODO, check for existing id
   this.playerPool.addPlayer(new ClientInfo(ws, playerId));
-
-  // Send all data because new player needs info, simpler to just resend to all
-  this.sendMessage(JSON.stringify(this.getConfig()));
+  return true;
 };
 
 GameInstance.prototype.getPlayerCount = function() {
@@ -43,22 +41,6 @@ GameInstance.prototype.getPlayerCount = function() {
 
 GameInstance.prototype.sendMessage = function(message) {
   this.playerPool.broadcast(message);
-};
-
-GameInstance.prototype.sendGamestate = function(state, data = null) {
-    this.sendMessage(JSON.stringify({
-      type: "gamestate",
-      data: data
-    }));
-};
-
-GameInstance.prototype.sendSetupInfo = function() {
-    this.sendMessage(JSON.stringify({
-      type: "gamestate",
-      state: "config",
-      drawRoundTime: this.drawRoundTime,
-      phraseRoundTime: this.phraseRoundTime
-    }));
 };
 
 GameInstance.prototype.isGameOver = function() {
@@ -87,6 +69,10 @@ GameInstance.prototype.updateGame = function(context){
     }
   }
 };
+
+GameInstance.prototype.getPlayerIds = function() {
+  return this.playerPool.getPlayerIds();
+}
 
 GameInstance.prototype.startPhraseRound = function(context){
   // message.send(JSON.stringify({

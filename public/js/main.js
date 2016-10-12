@@ -87,7 +87,8 @@ function createGame() {
 
 function joinGame() {
   var game_id = document.getElementById("game_id_input").value;
-  ws.send(JSON.stringify({type: 'joinGameInstance', data:{gameId:game_id}}));
+  var pid = document.getElementById('game_name_input').value;
+  ws.send(JSON.stringify({type: 'joinGameInstance', data:{gameId:game_id, playerId: pid}}));
 }
 
 function startGame() {

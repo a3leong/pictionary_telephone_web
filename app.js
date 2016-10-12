@@ -90,8 +90,11 @@ function createGame(data, playerSocket) {
 
 function joinGame(data, playerSocket) {
   console.log('join client');
-  if(gameInstanceDict[data.gameId]) {
-    gameInstanceDict[data.gameId].addPlayer(playerSocket, data.playerId); // TODO real name
+  var currentInstance = gameInstanceDict[data.gameId];
+  if(currentInstance) {
+    currentInstance.addPlayer(playerSocket, data.playerId);
+    // Send all data because new player needs info, simpler to just resend to all
+    currentInstance.sendMessage(JSON.stringify(currentInstance.getConfig()));
   } else {
     send(JSON.stringify(generateErrorMessage("Could not find game client")));
   }
