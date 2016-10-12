@@ -11,6 +11,7 @@ config:   // Used to send config data, resends to all players everytime config d
 {
     gameId: this.gameId,
     playerCount: this.getPlayerCount(),
+    playerIds: this.getPlayerIds(),
     drawRoundTime: this.drawRoundTime,
     phraseRoundTime: this.phraseRoundTime
 }
