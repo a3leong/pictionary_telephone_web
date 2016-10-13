@@ -21,6 +21,8 @@ config:   // Used to send config data, resends to all players everytime config d
 gamestatus:
 {
     status: 'firstPhrase' | 'phrase' | 'draw' | 'end' | 'expectData',  // expectData means waiting for clients to send canvas/word data
+    bookId: "book_id"   // Only for draw/phase gamestatus
+    data: 'some_string' // Either phrase or base64URL depending on round (phrase on draw round, URL on draw)
     currentRound: 1, // Optional
     totalRounds:  5  // Optional
 }
@@ -37,17 +39,10 @@ timer:    // Sends time left in round data
     timeLeft: 30 // Time left in seconds
 }
 
-
-
 error:
 {
     errmsg: "error_msg"
 }
-
-
-
-
-
 
 // Client to Server:
 {
@@ -83,14 +78,14 @@ startGameInstance:
 phraseDataSend:
 {
     gameId: 'game_id',
-    playerId: 'player_id',
+    bookId: 'book_id', // The player id of the book owner
     phrase: 'string'
 }
 
 drawDataSend:
 {
     gameId: 'game_id',
-    playerId: 'player_id',
+    bookId: 'book_id', // The player id of the book owner
     canvas: 'base64_url_encode_canvas_data'
 }
 
