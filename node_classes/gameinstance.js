@@ -1,6 +1,7 @@
 PlayerPool = require('./playerpool');
 GameTimer = require('./gametimer');
 ClientInfo = require('./clientinfo');
+Book = require('./book');
 
 function GameInstance(gameId, sockets = []) {
     this.gameRunning = false;
@@ -10,8 +11,7 @@ function GameInstance(gameId, sockets = []) {
     this.GameTimer = new GameTimer(this.playerPool);
     this.drawRoundTime = 30;
     this.phraseRoundTime = 10;
-    this.imageData = [];
-    this.phraseData = [];  // TODO handle ordering on recieving
+    this.playerBooks = {};
     this.context = this;
 };
 
@@ -32,6 +32,7 @@ GameInstance.prototype.getConfig = function() {
 GameInstance.prototype.addPlayer = function(ws, playerId) {
   // TODO, check for existing id
   this.playerPool.addPlayer(new ClientInfo(ws, playerId));
+  this.playerBooks['playerId'] = new Book();
   return true;
 };
 
@@ -88,6 +89,10 @@ GameInstance.prototype.startDrawRound = function(context){
   //   data: {state: "draw"}
   // }));
   this.GameTimer.timerCallback(this.drawRoundTime, this.updateGame, context, broadcast=true);
+};
+
+GameInstance.prototype.addPlayerPage = function(playerId, data) {
+  this.playerBooks[playerId].addPage(data);
 };
 
 GameInstance.prototype.sendResults = function(context){
