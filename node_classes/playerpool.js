@@ -12,6 +12,16 @@ PlayerPool.prototype.closeSockets = function() {
   }
 };
 
+PlayerPool.prototype.containsPlayerId = function(playerId) {
+  for(var i=0;i<this.playerPool.length;i++) {
+    if(this.playerPool[i].getId() === playerId) {
+      return true;
+    }
+  }
+
+  return false;
+};
+
 PlayerPool.prototype.closeSocket = function(playerId) {
   for(var i=0;i<this.playerPool.length;i++) {
     if(this.playerPool[i].getId() === playerId) {

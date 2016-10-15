@@ -92,6 +92,10 @@ function joinGame(data, playerSocket) {
   console.log('join client');
   var currentInstance = gameInstanceDict[data.gameId];
   if(currentInstance) {
+    if(currentInstance.playerIdExists()) {
+      send(JSON.stringify(generateErrorMessage("Username already taken")));
+      return;          // TODO throw/catch
+    }
     currentInstance.addPlayer(playerSocket, data.playerId);
     // Send all data because new player needs info, simpler to just resend to all
     currentInstance.sendMessage(JSON.stringify(currentInstance.getConfig()));

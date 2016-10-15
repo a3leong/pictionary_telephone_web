@@ -11,7 +11,7 @@ function GameInstance(gameId, sockets = []) {
     this.GameTimer = new GameTimer(this.playerPool);
     this.drawRoundTime = 30;
     this.phraseRoundTime = 10;
-    this.playerBooks = {};
+    this.playerBooks = {};  // Dictionary of each players book data as array
     this.context = this;
 };
 
@@ -34,6 +34,10 @@ GameInstance.prototype.addPlayer = function(ws, playerId) {
   this.playerPool.addPlayer(new ClientInfo(ws, playerId));
   this.playerBooks['playerId'] = new Book();
   return true;
+};
+
+GameInstance.prototype.playerIdExists = function(playerId) {
+  return this.playerPool.containsPlayerId();
 };
 
 GameInstance.prototype.getPlayerCount = function() {
