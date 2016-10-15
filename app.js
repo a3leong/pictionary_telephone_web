@@ -5,10 +5,14 @@ var server = require('http').createServer()
   , wss = new WebSocketServer({ server: server })
   , express = require('express')
   , app = express()
-  , port = 3000
+  , port = 3001
   , GameInstance = require('./node_classes/gameinstance');
 
-app.use("/public", express.static(__dirname + "/public"));
+app.use("/api", express.static(__dirname + "/public"));
+
+app.get('/hello', function (req, res) {
+  res.json({'msg': 'Hello World!'});
+});
 
 // app.use(function (req, res) {
 //   res.sendFile(path.join(__dirname + '/content/index.html'));
