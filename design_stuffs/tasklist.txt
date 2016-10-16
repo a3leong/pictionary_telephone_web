@@ -21,6 +21,7 @@ Aaron
 - Handle a DC
 - Handle DC before gamestart (auto-boot player)
 - Add kick functionality for host
+- Create ping/pong functions to keep things alive
 
 
 Wes

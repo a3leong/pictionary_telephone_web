@@ -66,7 +66,7 @@ function event_handler() {
   // }
 }
 
-var ws = new WebSocket("ws://localhost:3000");
+var ws = new WebSocket("ws://localhost:3001");
 
 ws.onopen = function() {
   alert("Socket ready");
