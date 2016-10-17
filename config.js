@@ -4,5 +4,6 @@ module.exports = {
   minPhraseTime: 5,
   defaultDrawTime: 30,
   maxDrawTime: 120,
-  minDrawTime: 5
+  minDrawTime: 5,
+  maxPlayers: 12
 };

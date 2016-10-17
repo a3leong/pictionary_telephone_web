@@ -1,6 +1,6 @@
 PlayerPool = require('./playerpool');
 GameTimer = require('./gametimer');
-ClientInfo = require('./clientinfo');
+Player = require('./Player');
 Book = require('./book');
 
 function GameInstance(gameId, sockets = []) {
@@ -30,8 +30,9 @@ GameInstance.prototype.getConfig = function() {
 };
 
 GameInstance.prototype.addPlayer = function(ws, playerId) {
+  console.log("Addplayer: " + this.playerPool.containsSocket(ws));
   // TODO, check for existing id
-  this.playerPool.addPlayer(new ClientInfo(ws, playerId));
+  this.playerPool.addPlayer(new Player(ws, playerId));
   this.playerBooks['playerId'] = new Book();
   return true;
 };

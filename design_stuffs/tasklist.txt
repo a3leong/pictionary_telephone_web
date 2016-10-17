@@ -34,5 +34,6 @@ Wes
   - Create results view
 -Create some kind of system to display results (each person gets their own set back like in the original game?)
     -> Flipbook?
+- Handle kick alert (socket close, possibly send a kick message but not sure yet)
 - Make it look pretty
 - Extra: pdf pages save option?

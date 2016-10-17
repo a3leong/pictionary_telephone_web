@@ -2,8 +2,24 @@ function PlayerPool(socketArray = []) {
   this.playerPool = socketArray;
 }
 
+PlayerPool.prototype.getSize = function() {
+  return this.playerPool.length;
+};
+
 PlayerPool.prototype.addPlayer = function(player) {
   this.playerPool.push(player);
+};
+
+PlayerPool.prototype.removePlayer = function(playerId) {
+  for(var i=0;i<this.playerPool.length;i++) {
+    if(this.playerPool[i].getId() === playerId) {
+      this.playerPool[i].closeSocket();
+      this.playerPool.splice(i,1);
+      return true;
+    }
+  }
+
+  return false; // Not found
 };
 
 PlayerPool.prototype.closeSockets = function() {
@@ -19,6 +35,15 @@ PlayerPool.prototype.containsPlayerId = function(playerId) {
     }
   }
 
+  return false;
+};
+
+PlayerPool.prototype.containsSocket = function(ws) {
+  for(var i=0;i<this.playerPool.length;i++) {
+    if(this.playerPool[i].getSocket() === ws) {
+      return true;
+    }
+  }
   return false;
 };
 

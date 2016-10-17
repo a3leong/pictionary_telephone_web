@@ -1,4 +1,7 @@
 var Config = require('../config');
+var Player = require('./player');
+var PlayerPool = require('./playerpool');
+var Err = require('./errmsg');
 
 /**
  * Room() is a class used to handle players joining and prepping for a game.
@@ -7,21 +10,21 @@ var Config = require('../config');
  function Room(phraseTime, drawTime) {   // Pass it config file defaults
   this.phraseTime = phraseTime;
   this.drawTime = drawTime;
-  this.players = []; // Stores player ids
+  this.playerPool = new PlayerPool();
   this.roomId = this.makeId();
 
  }
 
  Room.prototype.setPhraseTime = function(pTime) {
   if(pTime < Config.minPhraseTime || pTime > Config.maxPhraseTime) {
-    throw new Error("Phrase time out of boundaries");
+    throw new Error(Err.SET_PHASE_TIME_BOUND);
   }
   this.phraseTime = pTime;
  };
 
  Room.prototype.setDrawTime = function(dTime) {
   if(dTime < Config.minDrawTime || dTime > Config.maxDrawTime) {
-    throw new Error("Draw time out of boundaries");
+    throw new Error(Err.SET_DRAW_TIME_BOUND);
   }
   this.drawTime = dTime;
  };
@@ -35,23 +38,33 @@ Room.prototype.getDrawTime = function() {
 };
 
 // Returns false if player already exists
-Room.prototype.addPlayer = function(playerId) {
+Room.prototype.addPlayer = function(ws, playerId) {
+  if(this.playerPool.size>=Config.maxPlayers) {
+    throw new Error(Err.FULL_LOBBY);
+  }
   stringId = playerId.toString();   // In case a number is passed somehow
-  if(this.players.indexOf(stringId) != -1) {
-    return false;
+  if(this.playerPool.containsPlayerId(playerId)) {
+    throw new Error(Err.PLAYER_ID_EXISTS);
+  } else if(this.playerPool.containsSocket(ws)) {
+    throw new Error(Err.CONNECTION_EXISTS)
   } else {
-    this.players.push(stringId);
-    return true;
+    this.playerPool.addPlayer(new Player(ws, stringId));
   }
 };
 
+Room.prototype.containsPlayer = function(playerId) {
+  return this.playerPool.containsPlayerId(playerId);
+};
+
+Room.prototype.getPlayerIds = function() {
+  return this.playerPool.getPlayerIds();
+};
+
+
 Room.prototype.removePlayer = function(playerId) {
-  var i = this.players.indexOf(playerId.toString());  // In case a number is passed somehow
-  if(i != -1) {
-    return false;
-  } else {
-    this.players.splice(i, 1);
-    return true;
+  if(!this.playerPool.removePlayer(playerId)) {
+    throw new Error(Err.PLAYER_ID_DNE);
+    console.log(this.playerPool.getPlayerIds());
   }
 };
 
