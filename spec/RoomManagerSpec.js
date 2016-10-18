@@ -1,21 +1,28 @@
-describe("GameRoomTests", function() {
+describe("RoomManagerTests", function() {
   var Room = require('../node_classes/room');
+  var RoomManager = require('../node_classes/roommanager');
   var Config = require('../config');
   var Err = require('../node_classes/errmsg');
   var gameRoom;
   beforeEach(function() {
-    gameRoom = new Room("testroom", Config.defaultPhraseTime, Config.defaultDrawTime);
+    roomManager = new RoomManager();
+  });
+
+  it("Should be able to make unique game rooms",function() {
+    // Make game room http
+    var  roomId = gameRoom.getId();
+    expect(roomId).toBeTruthy();
   });
 
   it("Should be able to view the info of a room and set variables", function() {
     // Check for defaults
-    expect(gameRoom.phraseTime).toEqual(Config.defaultPhraseTime);
-    expect(gameRoom.drawTime).toEqual(Config.defaultDrawTime);
+    expect(gameRoom.getPhraseTime()).toEqual(Config.defaultPhraseTime);
+    expect(gameRoom.getDrawTime()).toEqual(Config.defaultDrawTime);
 
-    gameRoom.setPhraseTime(gameRoom.phraseTime+3);
-    gameRoom.setDrawTime(gameRoom.drawTime-3);
-    expect(gameRoom.phraseTime).toEqual(Config.defaultPhraseTime+3);
-    expect(gameRoom.drawTime).toEqual(Config.defaultDrawTime-3);
+    gameRoom.setPhraseTime(gameRoom.getPhraseTime()+3);
+    gameRoom.setDrawTime(gameRoom.getDrawTime()-3);
+    expect(gameRoom.getPhraseTime()).toEqual(Config.defaultPhraseTime+3);
+    expect(gameRoom.getDrawTime()).toEqual(Config.defaultDrawTime-3);
   });
 
   it("Should expect an error when setting variables outside of config boundaries", function() {
