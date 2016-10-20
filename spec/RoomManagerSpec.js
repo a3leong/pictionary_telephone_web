@@ -1,19 +1,18 @@
 describe("RoomManagerTests", function() {
-  var Room = require('../node_classes/room');
   var RoomManager = require('../node_classes/roommanager');
   var Config = require('../config');
   var Err = require('../node_classes/errmsg');
-  var gameRoom;
+  var roomManager;
   beforeEach(function() {
     roomManager = new RoomManager();
   });
 
   it("Should be able to make unique game rooms",function() {
     var idList = {};
-    for(var i=0;i<100;i++) {
+    for(var i=0;i<1000;i++) {
       var newId = roomManager.createRoom();
       expect(idList[newId]).toBeFalsy(); // Check if it already exists
-      idList[roomManager.createRoom()] = true; // If it doesn't fail expect we do this
+      idList[newId] = true; // If it doesn't fail expect we do this
     }
   });
 

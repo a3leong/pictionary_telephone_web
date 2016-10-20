@@ -19,8 +19,8 @@ describe("GameRoomTests", function() {
   });
 
   it("Should expect an error when setting variables outside of config boundaries", function() {
-    expect(function(){gameRoom.setPhraseTime(Config.minPhraseTime-1);}).toThrowError(Err.SET_PHASE_TIME_BOUND);
-    expect(function(){gameRoom.setPhraseTime(Config.maxPhraseTime+1);}).toThrowError(Err.SET_PHASE_TIME_BOUND);
+    expect(function(){gameRoom.setPhraseTime(Config.minPhraseTime-1);}).toThrowError(Err.SET_PHRASE_TIME_BOUND);
+    expect(function(){gameRoom.setPhraseTime(Config.maxPhraseTime+1);}).toThrowError(Err.SET_PHRASE_TIME_BOUND);
     expect(function(){gameRoom.setDrawTime(Config.minDrawTime-1);}).toThrowError(Err.SET_DRAW_TIME_BOUND);
     expect(function(){gameRoom.setDrawTime(Config.maxDrawTime+1);}).toThrowError(Err.SET_DRAW_TIME_BOUND);
   });
