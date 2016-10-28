@@ -1,3 +1,7 @@
+var Config = require("../config");
+var Err = require('./errmsg');
+var Player = require('./player');
+
 function PlayerPool(socketArray = []) {
   this.playerPool = socketArray;
 }
@@ -6,8 +10,18 @@ PlayerPool.prototype.getSize = function() {
   return this.playerPool.length;
 };
 
-PlayerPool.prototype.addPlayer = function(player) {
-  this.playerPool.push(player);
+PlayerPool.prototype.addPlayer = function(playerId, ws) {
+  if(this.playerPool.size>=Config.maxPlayers) {
+    throw new Error(Err.FULL_LOBBY);
+  }
+  stringId = playerId.toString();   // In case a number is passed somehow
+  if(this.containsPlayerId(playerId)) {
+    throw new Error(Err.PLAYER_ID_EXISTS);
+  } else if(this.containsSocket(ws)) {
+    throw new Error(Err.CONNECTION_EXISTS)
+  } else {
+    this.playerPool.push(new Player(ws, stringId));
+  }
 };
 
 PlayerPool.prototype.removePlayer = function(playerId) {
@@ -15,17 +29,26 @@ PlayerPool.prototype.removePlayer = function(playerId) {
     if(this.playerPool[i].getId() === playerId) {
       this.playerPool[i].closeSocket();
       this.playerPool.splice(i,1);
-      return true;
+      return;
     }
   }
-
-  return false; // Not found
+  throw new Error(Err.PLAYER_ID_DNE);
 };
 
 PlayerPool.prototype.closeSockets = function() {
   for(var i=0;i<this.playerPool.length;i++) {
       this.playerPool[i].closeSocket();
   }
+};
+
+PlayerPool.prototype.closeSocket = function(playerId) {
+  for(var i=0;i<this.playerPool.length;i++) {
+    if(this.playerPool[i].getId() === playerId) {
+      this.playerPool[i].closeSocket();
+      return;
+    }
+  }
+  throw new Error(Err.PLAYER_ID_DNE);
 };
 
 PlayerPool.prototype.containsPlayerId = function(playerId) {
@@ -47,21 +70,6 @@ PlayerPool.prototype.containsSocket = function(ws) {
   return false;
 };
 
-PlayerPool.prototype.closeSocket = function(playerId) {
-  for(var i=0;i<this.playerPool.length;i++) {
-    if(this.playerPool[i].getId() === playerId) {
-      this.playerPool[i].closeSocket();
-      this.playerPool.splice(i, 1);
-      return true;
-    }
-  }
-  return false;
-};
-
-PlayerPool.prototype.getPlayerPool = function() {
-  return this.playerPool;
-};
-
 PlayerPool.prototype.getPlayerIds = function() {
   console.log("Get player ids");
   console.log("Size: " + this.playerPool.length);
@@ -78,8 +86,6 @@ PlayerPool.prototype.broadcast = function(message) {
   }
 };
 
-PlayerPool.prototype.playerCount = function() {
-  return this.playerPool.length;
-};
+
 
 module.exports = PlayerPool;

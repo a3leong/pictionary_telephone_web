@@ -10,8 +10,9 @@ var server = require('http').createServer()
 
 app.use("/api", express.static(__dirname + "/public"));
 
-app.get('/hello', function (req, res) {
-  res.json({'msg': 'Hello World!'});
+app.get('/createroom', function (req, res) {
+  
+  res.end([data][, encoding][, callback]);
 });
 
 // app.use(function (req, res) {

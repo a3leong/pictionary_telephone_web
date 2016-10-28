@@ -7,7 +7,8 @@ Up for discussion:
 
 
 Aaron
-- Add try/catches in place of if/elses
+- Refactor, remove dependencies on classes by putting instantiation at lowest possible levels
+- Figure out room manager vs  game started manager
 + Standardize and write documentation for payload format (object attribute names and expected data) 
 + Rewrite this.function's to Class.prototype.function = 
 - Require/support custom names for players (people should be able to see who drew/wrote what)
@@ -18,9 +19,10 @@ Aaron
 + Create canvas draw data class (to URL base64)
 + Figure out canvas data transport method
 + Assign websocket instances to array entries
-- Handle a DC
+- Handle a DC (socket closed/timeout)
 - Handle DC before gamestart (auto-boot player)
 - Add kick functionality for host
+- Send message before closing a socket
 - Create ping/pong functions to keep things alive
 
 
