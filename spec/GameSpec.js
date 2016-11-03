@@ -5,6 +5,7 @@ describe("GameTests", function() {
   var game;
   beforeEach(function() {
     var spyPool = jasmine.CreateSpy("Spypool");
+    spyPool.broadcast = function(){};
     game = new Game("someId",spyPool,Config.defaultPhraseTime, Config.defaultDrawTime);
   });
 
@@ -13,10 +14,23 @@ describe("GameTests", function() {
   });
 
   it("Should be able to broadcast to players when the client should change views", function() {
-    game.startGame();
+    game.startRound();
   });
 
   it("Should be able to broadcast to players that the game is waiting on client data", function() {
     game.startGame();
   });
+
+  it("Should throw an error when trying to send/store data when it is in the middle of a round ", function(){
+
+  });
+
+  it("Should throw an error when trying to start a game after is has already been started", function() {
+
+  });
+
+  it("Should throw an error when trying to call start round when a round is in progress", function() {
+    
+  });
+
 });

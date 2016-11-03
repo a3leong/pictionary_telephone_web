@@ -16,5 +16,7 @@ module.exports = {
 
   INVALID_DATA_URI: "Invalid data URI.",
   NO_PHRASE_DATA: "Book does not contain any phrase data entries",
-  NO_CANVAS_DATA: "Book does not contain any canvas data entries"
+  NO_CANVAS_DATA: "Book does not contain any canvas data entries",
+
+  NO_SUCH_MESSAGE_TYPE: "Message handler cannot handle this type of message"
 };

@@ -11,8 +11,8 @@ config:   // Used to send config data, resends to all players everytime config d
     gameId: this.gameId,
     playerCount: this.getPlayerCount(),
     playerIds: this.getPlayerIds(),
-    drawRoundTime: this.drawRoundTime,
     phraseRoundTime: this.phraseRoundTime
+    drawRoundTime: this.drawRoundTime,
 }
 
 
@@ -47,7 +47,7 @@ error:
 // Client to Server:
 {
     type: 'createGameInstance' | 'joinGameInstance' | 'startGameInstance' \  // String value containing type of message expected
-          | 'roundDataSend' | 'updateConfigOption',             
+          | 'phraseDataSend' | 'drawDataSend' | 'updateConfigOption',             
     data: { }  // Data object depends on context
 }
 
@@ -95,8 +95,3 @@ updateConfigOption:
     drawRoundTime: 30,   // Any int
     phraseRoundTime: 10  // Any int
 }
-/**
-    createGameInstance
-
-
-**/

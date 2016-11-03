@@ -7,11 +7,11 @@ function GameManager() {
 }
 
 GameManager.prototype.getPlayerPool = function(id) {
-  if(this.gameDictionary[id]) {
-    return this.gameDictionary[id].getPlayerPool();
-  } else {
+  if(!this.gameDictionary[id]) {
     throw new Error(Err.GAME_DNE);
   }
+
+  return this.gameDictionary[id].getPlayerPool();
 };
 
 GameManager.prototype.createGame = function(playerPool, phraseTime, drawTime) {
@@ -39,28 +39,44 @@ GameManager.prototype.createGame = function(playerPool, phraseTime, drawTime) {
 };
 
 GameManager.prototype.destroyGame = function(id) {
-  if(this.gameDictionary[id]) {
-   this.gameDictionary[id].closeSockets();
-   this.gameDictionary[id] = null;
-  } else {
+  if(!this.gameDictionary[id]) {
    throw new Error(Err.GAME_DNE);
   }
+
+  this.gameDictionary[id].closeSockets();
+  this.gameDictionary[id] = null;
 };
 
 GameManager.prototype.startGame = function(id) {
-  if(this.gameDictionary[id]) {
-    this.gameDictionary[id].startGame();
-  } else {
+  if(!this.gameDictionary[id]) {
     throw new Error(Err.GAME_DNE);
   }
+
+  this.gameDictionary[id].startGame();
 };
 
-GameManager.prototype.sendMessage = function(gameId, msg) {
-  if(this.gameDictionary[gameId]) {
-    this.gameDictionary[gameId].handleMessage(msg);
-  } else {
+// GameManager.prototype.sendMessage = function(gameId, msg) {
+//   if(!this.gameDictionary[gameId]) {
+//     throw new Error(Err.GAME_DNE);
+//   }
+
+//   this.gameDictionary[gameId].handleMessage(msg);
+// };
+
+GameManger.prototype.storePhraseData = function(gameId, phrase) {
+  if(!this.gameDictionary[gameId]) {
+    throw new Error(Err.GAME_DNE); 
+  }
+
+  this.gameDictionary[gameId].storePhraseData(phrase);
+};
+
+GameManager.prototype.storeDrawData = function(gameId, canvas) {
+  if(!this.gameDictionary[gameId]) {
     throw new Error(Err.GAME_DNE);
   }
+
+  this.gameDictionary[gameId].storeDrawData(canvas);
 };
 
 GameManager.prototype.containsGame = function(id) {

@@ -76,9 +76,10 @@ describe("GameManagerTests", function() {
     expect(function(){gameManager.destroyGame(id);}).toThrowError(Err.GAME_DNE);
   });
 
-  it("Should throw an error trying to send a message to nonexistant game", function() {
+  it("Should throw an error trying to store data in a nonexistant game", function() {
     var id = gameManager.createGame(fakePool, phraseTime, drawTime);
-    expect(function(){gameManager.sendMessage("nottheid", "dummymsg");}).toThrowError(Err.GAME_DNE); 
+    expect(function(){gameManager.storePhraseData("nottheid", "dummymsg");}).toThrowError(Err.GAME_DNE); 
+    expect(function(){gameManager.storeDrawData("nottheid", "dummymsg");}).toThrowError(Err.GAME_DNE); 
   });
 
   it("Should throw an error trying to start a nonexistant game", function() {

@@ -20,6 +20,16 @@ Room.prototype.getPlayerIds = function() {
   return this.playerPool.getPlayerIds();
 };
 
+Room.prototype.getConfig = function() {
+  return {
+    gameId: this.id,
+    playerCount: this.playerPool.getSize(),
+    playerIds: this.playerPool.getPlayerIds(),
+    phraseRoundTime: this.phraseTime,
+    drawRoundTime: this.drawTime
+  };
+};
+
 Room.prototype.setPhraseTime = function(pTime) {
   if(pTime < Config.minPhraseTime || pTime > Config.maxPhraseTime) {
     throw new Error(Err.SET_PHASE_TIME_BOUND);
@@ -37,17 +47,8 @@ Room.prototype.setDrawTime = function(dTime) {
 // Throw error on existing
 Room.prototype.addPlayer = function(playerId, ws) {
   this.playerPool.addPlayer(playerId, ws);
-  // if(this.playerPool.size>=Config.maxPlayers) {
-  //   throw new Error(Err.FULL_LOBBY);
-  // }
-  // stringId = playerId.toString();   // In case a number is passed somehow
-  // if(this.playerPool.containsPlayerId(playerId)) {
-  //   throw new Error(Err.PLAYER_ID_EXISTS);
-  // } else if(this.playerPool.containsSocket(ws)) {
-  //   throw new Error(Err.CONNECTION_EXISTS)
-  // } else {
-  //   this.playerPool.addPlayer(new Player(ws, stringId));
-  // }
+  this.playerPool.broadcast(JSON.stringify(
+  ))
 };
 
 Room.prototype.closeSockets = function() {
