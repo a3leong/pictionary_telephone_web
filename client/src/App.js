@@ -6,7 +6,6 @@ import injectTapEventPlugin from 'react-tap-event-plugin';
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
 
-import logo from './aaron.svg';
 import './App.css';
 
 injectTapEventPlugin();
@@ -47,7 +46,6 @@ class App extends Component {
           />
           <div className="App-header">
             <h3>{this.state.payload.msg}</h3>
-            <img src={logo} className="App-logo" alt="logo" />
             <h2>Telephone Pictionary</h2>
           </div>
           {this.props.children}
