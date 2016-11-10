@@ -63,7 +63,7 @@ GameManager.prototype.startGame = function(id) {
 //   this.gameDictionary[gameId].handleMessage(msg);
 // };
 
-GameManger.prototype.storePhraseData = function(gameId, phrase) {
+GameManager.prototype.storePhraseData = function(gameId, phrase) {
   if(!this.gameDictionary[gameId]) {
     throw new Error(Err.GAME_DNE); 
   }

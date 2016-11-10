@@ -18,5 +18,8 @@ module.exports = {
   NO_PHRASE_DATA: "Book does not contain any phrase data entries",
   NO_CANVAS_DATA: "Book does not contain any canvas data entries",
 
-  NO_SUCH_MESSAGE_TYPE: "Message handler cannot handle this type of message"
+  NO_SUCH_MESSAGE_TYPE: "Message handler cannot handle this type of message",
+
+  ROUND_IN_PROGRESS: "Cannot start round because a round is already in progress",
+  WRONG_DATA_SEND: "Game was not expecting to collect this type of data"
 };
