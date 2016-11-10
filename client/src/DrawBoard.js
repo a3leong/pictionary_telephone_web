@@ -1,67 +1,118 @@
 import React from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
-import {Card, CardTitle, CardText} from 'material-ui/Card';
+import {Card} from 'material-ui/Card';
 
 import './DrawBoard.css';
 
+const PADDING = 20;
+
 class DrawBoard extends React.Component {
   componentDidMount() {
-    this.ctx = this.refs.myCanvas.getContext('2d');
-    const canvas = this.refs.myCanvas;
-
-    this.canvas = canvas;
+    this.canvas = this.refs.myCanvas;
+    this.ctx = this.canvas.getContext('2d');
 
     this.prevX = 0;
-    this.currX = 0;
     this.prevY = 0;
+    this.currX = 0;
     this.currY = 0;
 
-    this.width = canvas.width;
-    this.height = canvas.height;
+    this.ctx.strokeStyle = "black"
+    this.ctx.lineWidth = 2;
 
-    canvas.addEventListener("mousedown", this.touch.bind(this));
-    canvas.addEventListener("mousemove", this.draw.bind(this));
-    canvas.addEventListener("mouseup", this.release.bind(this))
-    canvas.addEventListener("mouseout", this.release.bind(this))
+    this.resizeCanvas();
+    window.addEventListener("resize", this.resizeCanvas.bind(this));
+
+    // For web
+    this.canvas.addEventListener("mousedown", this.touch.bind(this));
+    this.canvas.addEventListener("mousemove", this.draw.bind(this));
+    this.canvas.addEventListener("mouseup", this.release.bind(this))
+    this.canvas.addEventListener("mouseout", this.release.bind(this))
+
+    // For iOS safari
+    this.canvas.addEventListener("touchstart", (ev) => {
+      ev.preventDefault();
+      this.touch(ev, true);
+    });
+
+    this.canvas.addEventListener("touchmove", (ev) => {
+      ev.preventDefault();
+      this.draw(ev, true);
+    });
+
+    this.canvas.addEventListener("touchend", (ev) => {
+      ev.preventDefault();
+      this.release(ev);
+    });
+  }
+
+  resizeCanvas() {
+    this.width = window.innerWidth - PADDING;
+    this.canvas.width = window.innerWidth - PADDING;
+    this.height = window.innerHeight - PADDING;
+    this.canvas.height = window.innerHeight - PADDING;
+  }
+
+  preventDrag(ev) {
+    ev.preventDefault();
   }
 
   setupCoords(ev) {
-      this.prevX = this.currX;
-      this.prevY = this.currY;
-      this.currX = ev.clientX - this.canvas.getBoundingClientRect().left;
-      this.currY = ev.clientY - this.canvas.getBoundingClientRect().top;
+    this.prevX = this.currX;
+    this.prevY = this.currY;
+
+    const rect = this.canvas.getBoundingClientRect();
+    this.currX = ev.clientX - rect.left;
+    this.currY = ev.clientY - rect.top;
   }
 
-  touch(ev) {
-    this.setupCoords(ev);
+  setupCoordsTouch(ev) {
+    this.prevX = this.currX;
+    this.prevY = this.currY;
+
+    const rect = this.canvas.getBoundingClientRect();
+    this.currX = ev.touches[0].clientX - rect.left;
+    this.currY = ev.touches[0].clientY - rect.top;
+  }
+
+  touch(ev, isTouch) {
+    if (isTouch) {
+      this.setupCoordsTouch(ev);
+    } else {
+      this.setupCoords(ev);
+    }
 
     this.mouseDown = true;
-    this.ctx.beginPath();
-    this.ctx.fillStyle = "black";
-    this.ctx.fillRect(this.currX, this.currY, 2, 2);
-    this.ctx.closePath();
+
+    if (this.enableDot) {
+      this.ctx.beginPath();
+      this.ctx.fillStyle = "black";
+      this.ctx.fillRect(this.currX, this.currY, 2, 2);
+      this.ctx.closePath();
+    }
   }
 
-  draw(ev) {
+  draw(ev, isTouch) {
     if (this.mouseDown) {
-      this.setupCoords(ev);
+      if (isTouch) {
+        this.setupCoordsTouch(ev);
+      } else {
+        this.setupCoords(ev);
+      }
 
       this.ctx.beginPath();
       this.ctx.moveTo(this.prevX, this.prevY);
       this.ctx.lineTo(this.currX, this.currY);
-      this.ctx.strokeStyle = "black"
-      this.ctx.lineWidth = 2;
       this.ctx.stroke();
       this.ctx.closePath();
     }
   }
 
-  clear() {
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-  }
-
   release(ev) {
     this.mouseDown = false;
+  }
+
+  clear() {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
   }
 
   submit() {
@@ -72,7 +123,10 @@ class DrawBoard extends React.Component {
     return (
       <div className="DrawBoard">
         <Card>
-          <CardTitle title="Draw Board" subtitle="Sketch your stuff here!" />
+            <canvas
+              className="DrawCanvas"
+              ref="myCanvas"
+            />
           <RaisedButton
             label="Send Image"
             onClick={this.submit.bind(this)}
@@ -81,14 +135,6 @@ class DrawBoard extends React.Component {
             label="Clear Canvas"
             onClick={this.clear.bind(this)}
           />
-          <CardText>
-            <canvas
-              ref="myCanvas"
-              style={{border:1, borderStyle:"dotted"}}
-              width={500}
-              height={500}
-            />
-          </CardText>
         </Card>
       </div>
     )

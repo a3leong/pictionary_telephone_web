@@ -44,10 +44,6 @@ class App extends Component {
             iconClassNameRight="muidocs-icon-navigation-expand-more"
             onLeftIconButtonTouchTap={this.handleToggle}
           />
-          <div className="App-header">
-            <h3>{this.state.payload.msg}</h3>
-            <h2>Telephone Pictionary</h2>
-          </div>
           {this.props.children}
 
           <Drawer
