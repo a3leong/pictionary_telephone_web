@@ -32,7 +32,7 @@ Room.prototype.getConfig = function() {
 
 Room.prototype.setPhraseTime = function(pTime) {
   if(pTime < Config.minPhraseTime || pTime > Config.maxPhraseTime) {
-    throw new Error(Err.SET_PHASE_TIME_BOUND);
+    throw new Error(Err.SET_PHRASE_TIME_BOUND);
   }
   this.phraseTime = pTime;
 };
