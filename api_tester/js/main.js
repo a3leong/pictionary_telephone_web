@@ -80,10 +80,10 @@ ws.onmessage = function(event) {
   document.getElementById("response").innerHTML = received_msg;
 };
 
-function createGame() {
-  var pid = document.getElementById('game_name_input').value;
-  ws.send(JSON.stringify({type: 'createGameInstance', data:{playerId: pid}}));
-}
+// function createGame() {
+//   var pid = document.getElementById('game_name_input').value;
+//   ws.send(JSON.stringify({type: 'createGameInstance', data:{playerId: pid}}));
+// }
 
 function joinGame() {
   var game_id = document.getElementById("game_id_input").value;
@@ -94,4 +94,13 @@ function joinGame() {
 function startGame() {
   var game_id = document.getElementById("game_id_input").value;
   ws.send(JSON.stringify({type: 'startGameInstance', data:{gameId:game_id}}));
+}
+
+function createGame() {
+  return new Promise(function(resolve,reject) {
+    $.get('localhost:3001/api/creategame').then(function(data){
+      console.log(data);
+      resolve();
+    });
+  });
 }

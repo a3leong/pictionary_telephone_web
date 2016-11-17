@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<head>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+  <script src="js/main.js"></script>
+  <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+  <link rel="stylesheet" href="./css/main.css">
+ <!-- <script src="js/main.js"></script> -->
+</head>
+<body>
+  <header>
+    <h1>Pictionary Telephone Tester</h1>
+  </header>
+  <main>
+    <section id='create-game-screen' class='vertical-flex'>
+      <label>Player name</label>
+      <input type='text' id='player_id' value='DummyPlayer'/>
+      <input type='button' class='pure-button pure-button-primary' value='Create Game' onclick='createGame()' />
+      <input type='button' class='pure-button pure-button-primary' value='Join Game' onclick="joinGame()" />
+      <input type='text' id='game_id_input' value='Insert game id here' />
+    </section>
+    <section id='room-screen' class='vertical-flex hidden'>
+      <h2>Game Lobby <span id='lobbyid'></span></h2>
+      <label>Players:</label>
+      <textarea id='players'></textarea>
+      <input type='button' value='Start Game' onclick="startGame()" />
+    </section>
+    <section id='outputs'>
+      <textarea id='response'>Value goes here</textarea>
+    </section>
+  </main>
+</body>
+</html>

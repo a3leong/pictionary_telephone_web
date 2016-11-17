@@ -10,7 +10,11 @@ var server = require('http').createServer()
   , port = 3001
   , GameInstance = require('./node_classes/gameinstance');
 
-app.use("/api", express.static(__dirname + "/public"));
+app.use("/", express.static(__dirname + "/api_tester"));
+
+// app.get("/index", function(req, res) {
+//   res.render('./api_tester/index.html');
+// });
 
 var roomManager = new RoomManager();
 var gameManager = new GameManager();
@@ -32,4 +36,19 @@ app.get('/api/creategame', function(req, res) {
 //     console.log(message);
 //     handleMessage(message, this);
 //   });
+// });
+
+// app.all("/api/*", function(req, res, next) {
+//   res.header("Access-Control-Allow-Origin", "*");
+//   res.header("Access-Control-Allow-Headers", "Cache-Control, Pragma, Origin, Authorization, Content-Type, X-Requested-With");
+//   res.header("Access-Control-Allow-Methods", "GET, PUT, POST");
+//   return next();
+// });
+
+
+// app.all("/api/*", function(req, res, next) {
+//   if (req.method.toLowerCase() !== "options") {
+//     return next();
+//   }
+//   return res.send(204);
 // });
