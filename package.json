@@ -9,7 +9,8 @@
     "ws": "^1.1.1"
   },
   "devDependencies": {
-    "jasmine": "^2.5.2"
+    "jasmine": "^2.5.2",
+    "validator": "^6.1.0"
   },
   "scripts": {
     "server": "node app.js",
