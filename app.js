@@ -29,26 +29,3 @@ app.get('/api/creategame', function(req, res) {
     res.json({ message: value });   
     console.log(value);
 });
-// wss.on('connection', function connection(ws) {
-//   console.log("Connection set");
- 
-//   ws.on('message', function incoming(message) {
-//     console.log(message);
-//     handleMessage(message, this);
-//   });
-// });
-
-// app.all("/api/*", function(req, res, next) {
-//   res.header("Access-Control-Allow-Origin", "*");
-//   res.header("Access-Control-Allow-Headers", "Cache-Control, Pragma, Origin, Authorization, Content-Type, X-Requested-With");
-//   res.header("Access-Control-Allow-Methods", "GET, PUT, POST");
-//   return next();
-// });
-
-
-// app.all("/api/*", function(req, res, next) {
-//   if (req.method.toLowerCase() !== "options") {
-//     return next();
-//   }
-//   return res.send(204);
-// });

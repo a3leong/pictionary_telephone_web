@@ -98,7 +98,7 @@ function startGame() {
 
 function createGame() {
   return new Promise(function(resolve,reject) {
-    $.get('localhost:3001/api/creategame').then(function(data){
+    $.get('http://localhost:3001/api/creategame').then(function(data){
       console.log(data);
       resolve();
     });
