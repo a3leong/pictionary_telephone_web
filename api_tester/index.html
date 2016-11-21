@@ -13,19 +13,21 @@
   <main>
     <section id='create-game-screen' class='vertical-flex'>
       <label>Player name</label>
-      <input type='text' id='player_id' value='DummyPlayer'/>
-      <input type='button' class='pure-button pure-button-primary' value='Create Game' onclick='createGame()' />
+      <input type='text' id='player-id' value='DummyPlayer'/>
+      <input type='button' class='pure-button pure-button-primary' value='Create Game' onclick='createGameAndSocketConnect()' />
       <input type='button' class='pure-button pure-button-primary' value='Join Game' onclick="joinGame()" />
       <input type='text' id='game_id_input' value='Insert game id here' />
     </section>
     <section id='room-screen' class='vertical-flex hidden'>
-      <h2>Game Lobby <span id='lobbyid'></span></h2>
+      <h2>Game Lobby: <span id='lobbyid'></span></h2>
       <label>Players:</label>
       <textarea id='players'></textarea>
-      <input type='button' value='Start Game' onclick="startGame()" />
+      <input type='button' class='pure-button pure-button-primary' value='Start Game' onclick="startGame()" />
     </section>
-    <section id='outputs'>
-      <textarea id='response'>Value goes here</textarea>
+    <section id='custom-input' class='vertical-flex'>
+      <label>Custom input</label>
+      <textarea id='custom-input-textarea'></textarea>
+      <input type='button' class='pure-button pure-button-primary' value='Send Custom' onclick='sendCustomMessage()' />
     </section>
   </main>
 </body>

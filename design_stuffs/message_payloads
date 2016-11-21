@@ -1,3 +1,6 @@
+// Server to client REST api: /api/createroom
+// Returns a string value containing the game id
+
 // Server to client:
 {
     type: 'config' | 'timer' | 'error' | 'gamestatus' | 'playerBook',        // String value containing type of message expected
@@ -46,7 +49,7 @@ error:
 
 // Client to Server:
 {
-    type: 'createGameInstance' | 'joinGameInstance' | 'startGameInstance' \  // String value containing type of message expected
+    type: 'createGameInstance' | 'joinGameInstance' | 'kickPlayer' | 'startGameInstance' \  // String value containing type of message expected
           | 'phraseDataSend' | 'drawDataSend' | 'updateConfigOption',             
     data: { }  // Data object depends on context
 }

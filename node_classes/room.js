@@ -22,11 +22,14 @@ Room.prototype.getPlayerIds = function() {
 
 Room.prototype.getConfig = function() {
   return {
-    gameId: this.id,
-    playerCount: this.playerPool.getSize(),
-    playerIds: this.playerPool.getPlayerIds(),
-    phraseRoundTime: this.phraseTime,
-    drawRoundTime: this.drawTime
+    type: 'config',
+    data: {
+      gameId: this.id,
+      playerCount: this.playerPool.getSize(),
+      playerIds: this.playerPool.getPlayerIds(),
+      phraseRoundTime: this.phraseTime,
+      drawRoundTime: this.drawTime
+    }
   };
 };
 
@@ -46,9 +49,9 @@ Room.prototype.setDrawTime = function(dTime) {
 
 // Throw error on existing
 Room.prototype.addPlayer = function(playerId, ws) {
+  console.log("Add player");
   this.playerPool.addPlayer(playerId, ws);
-  this.playerPool.broadcast(JSON.stringify(
-  ))
+  this.playerPool.broadcast(JSON.stringify(this.getConfig()));
 };
 
 Room.prototype.closeSockets = function() {
