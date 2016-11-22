@@ -60,6 +60,7 @@ Room.prototype.closeSockets = function() {
 
 Room.prototype.removePlayer = function(playerId) {
   this.playerPool.removePlayer(playerId);
+  this.playerPool.broadcast(JSON.stringify(this.getConfig()));
 };
 
 Room.prototype.containsPlayer = function(playerId) {

@@ -11,10 +11,12 @@ function createGame() {
 // {"type": "kickPlayer", "data": {"gameId":"hxqyp", "playerId":"DummyPlayer"}}
 function joinGame() {
   var gameId = $("#game_id_input").val();
+  $("#lobbyid").html(gameId);
   var playerId = $("#player-id").val();
   console.log("gameid: " + gameId);
   console.log("playerid: " + playerId);
   ws = new WebSocket("ws://localhost:3001");
+  showRoom();
   ws.onopen = function(){
     ws.send(JSON.stringify({
       type: "joinGameInstance",
@@ -23,6 +25,17 @@ function joinGame() {
         playerId: playerId
       }
     }));
+  };
+
+  ws.onmessage = function(event) {
+    console.log("event");
+    console.log(event.data);
+    if(event.data!=='Connection set') {
+      var obj = JSON.parse(event.data);
+      var data = obj.data;
+      console.log(data.playerIds);
+      showPlayers(data.playerIds);
+    }
   };
 
 }
@@ -54,14 +67,7 @@ function createGameAndSocketConnect() {
         var obj = JSON.parse(event.data);
         var data = obj.data;
         console.log(data.playerIds);
-        var players = '';
-
-        for(var i=0;i<data.playerIds.length;i++) {
-          console.log("pid: " + data.playerIds[i]);
-          players += data.playerIds[i] + '\n';
-        }
-        console.log("Players: " + players);
-        $('#players').val(players);
+        showPlayers(data.playerIds);
       }
     };
   });
@@ -71,6 +77,15 @@ function showRoom() {
   $("#create-game-screen").addClass("hidden");
   $("#room-screen").removeClass("hidden");
 };
+
+function showPlayers(playerList) {
+  var players = '';
+
+  for(var i=0;i<playerList.length;i++) {
+    players += playerList[i] + '\n';
+  }
+  $('#players').val(players);
+}
 
 function sendCustomMessage() {
   if(!ws) {
