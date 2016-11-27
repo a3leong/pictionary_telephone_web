@@ -14,6 +14,8 @@ function Game(id, playerPool, phraseTime, drawTime) {
   this.context = this;
   this.roundInProgress = false; // server-client synchronization
   this.gameStarted = false;     // server-client synchronization
+
+  console.log("Game created: " + this.id + " phraseTime: " + this.drawTime);
 }
 
 Game.prototype.closeSockets = function() {
@@ -42,6 +44,19 @@ Game.prototype.isGameOver = function() {
   }
 };
 
+Game.prototype.startGame = function() {
+  this.playerPool.broadcast(JSON.stringify({
+    type: 'gamestatus',
+    data: {
+      status: 'firstPhrase',
+      bookId: 'book_id',
+      data: 'some_string',
+    }
+  }));
+
+  this.gameTimer.timerCallback(this.phraseTime, this.endRound, this.context);
+};
+
 Game.prototype.startRound = function() {
   if(this.roundInProgress) {
     throw new Error(Err.ROUND_IN_PROGRESS);
@@ -52,10 +67,10 @@ Game.prototype.startRound = function() {
     this.endGame();
   } else if(this.currentRound%2===0) {
     // Do phrase round
-    gameTimer.callback(this.phraseTime, this.endRound, this.context);
+    this.gameTimer.timerCallback(this.phraseTime, this.endRound, this.context);
   } else {
     // Do draw round
-    gameTimer.callback(this.phraseTime, this.endRound, this.context);
+    this.gameTimer.timerCallback(this.drawTime, this.endRound, this.context);
   }
   // TODO make sure startround cannot be invoked before timer ends
 

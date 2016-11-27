@@ -96,3 +96,13 @@ function sendCustomMessage() {
     ws.send(document.getElementById("custom-input-textarea").value);
   }
 }
+
+function startGame() {
+  var gameId = $("#lobbyid").text();
+  ws.send(JSON.stringify({
+    type: 'startGameInstance',
+    data: {
+      gameId: gameId
+    }
+  }));
+}

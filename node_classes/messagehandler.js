@@ -31,7 +31,7 @@ MessageHandler.prototype.handleMessage = function(message, wsSender) {
       break;
     case 'startGameInstance':
       console.log("Start game instance");
-      // this.convertRoomToGame(data.gameId);
+      this.convertRoomToGame(data.gameId);
       break;
     case 'phraseDataSend':
       console.log("Phrase data send");
@@ -43,7 +43,7 @@ MessageHandler.prototype.handleMessage = function(message, wsSender) {
     default:
       throw new Error(Err.NO_SUCH_MESSAGE_TYPE);
   }
-}
+};
 
 MessageHandler.prototype.createRoom = function() {
   return this.roomManager.createRoom();
@@ -55,13 +55,13 @@ MessageHandler.prototype.addPlayerToRoom = function(roomId, playerId, ws) {
 
 MessageHandler.prototype.removePlayerFromRoom = function(roomId, playerId) {
   this.roomManager.removePlayer(roomId, playerId);
-}
+};
 
 MessageHandler.prototype.convertRoomToGame = function(roomId) {
   var playerPool = this.roomManager.getPlayerPool(roomId);
   var configObj = this.roomManager.getConfig(roomId);
   this.roomManager.destroyRoom(roomId);
-  var gameId = this.gameManager.createGame(playerPool, configObj.phraseRoundTime, configObj.drawRoundTime);
+  var gameId = this.gameManager.createGame(playerPool, configObj.data.phraseRoundTime, configObj.data.drawRoundTime);
   this.gameManager.startGame(gameId);
 };
 
