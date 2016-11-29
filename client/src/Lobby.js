@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Dialog from 'material-ui/Dialog';
+import { List, ListItem } from 'material-ui/List';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
 import {Card, CardHeader, CardActions, CardText} from 'material-ui/Card';
@@ -42,6 +43,7 @@ class Lobby extends Component {
     this.state = {
       name: selected,
       open: false,
+      players: [],
     };
   }
 
@@ -91,6 +93,9 @@ class Lobby extends Component {
       switch (msg.type) {
         case "config":
           console.log(msg.data.playerIds);
+          this.setState({
+            players: msg.data.playerIds
+          });
           break;
         default:
           console.log("unhandled");
@@ -157,14 +162,20 @@ class Lobby extends Component {
         </Card>
 
         {this.state.id != null &&
-          <Card>
+          (<Card>
             <CardHeader
               title="Lobby Status"
               subtitle={"ID: " + this.state.id}
             />
             <CardText>
+              Players:
+              <List>
+                {this.state.players.map(player => {
+                  return <ListItem key={player} primaryText={player} />;
+                })}
+              </List>
             </CardText> 
-          </Card>
+          </Card>)
         }
 
         <Dialog
