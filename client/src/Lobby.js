@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
 import {Card, CardHeader, CardActions, CardText} from 'material-ui/Card';
-
+import config from './config';
 import './Lobby.css';
 
 const names = [
@@ -30,7 +30,6 @@ const last = [
   'Wu',
   'Tam',
 ];
-
 class Lobby extends Component {
   constructor(props) {
     super(props);
@@ -53,7 +52,12 @@ class Lobby extends Component {
       this.setState({
         id: response
       })
+      this.game(response);
     });
+  }
+
+  game(id) {
+    this.ws = new WebSocket("ws://" + window.location.hostname + ":" + config.BACKEND_PORT);
   }
 
   render() {
