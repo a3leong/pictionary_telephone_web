@@ -30,6 +30,19 @@ class Lobby extends Component {
     };
   }
 
+  create() {
+    fetch('/api/createroom', {
+      accept: 'application/json',
+    }).then(response => {
+      return response.json();
+    }).then(response => {
+      console.log(response);
+      this.setState({
+        id: response
+      })
+    });
+  }
+
   render() {
     return (
       <div className="Lobby">
@@ -46,8 +59,13 @@ class Lobby extends Component {
             />
           </CardText>
           <CardActions>
-            <FlatButton label="Create Game" />
-            <FlatButton label="Join Game" />
+            <FlatButton 
+              onClick={this.create.bind(this)}
+              label="Create Game"
+            />
+            <FlatButton 
+              label="Join Game" 
+            />
           </CardActions>
         </Card>
       </div>
