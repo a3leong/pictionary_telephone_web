@@ -60,14 +60,27 @@ class Lobby extends Component {
           </CardText>
           <CardActions>
             <FlatButton 
+              disabled={this.state.id != null}
               onClick={this.create.bind(this)}
               label="Create Game"
             />
             <FlatButton 
+              disabled={this.state.id != null}
               label="Join Game" 
             />
           </CardActions>
         </Card>
+
+        {this.state.id != null &&
+            <Card>
+              <CardHeader
+                title="Lobby Status"
+                subtitle={"ID: " + this.state.id}
+              />
+              <CardText>
+              </CardText> 
+            </Card>
+        }
       </div>
     )
   }
