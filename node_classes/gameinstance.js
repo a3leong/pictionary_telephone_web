@@ -1,6 +1,6 @@
 PlayerPool = require('./playerpool');
 GameTimer = require('./gametimer');
-Player = require('./Player');
+Player = require('./player');
 Book = require('./book');
 
 function GameInstance(gameId, sockets = []) {

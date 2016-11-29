@@ -9,8 +9,6 @@ var server = require('http').createServer()
   , MessageHandler = require('./node_classes/messagehandler.js')
   , app = express()
   , port = 3001
-  , GameInstance = require('./node_classes/gameinstance');
-
 app.use("/", express.static(__dirname + "/api_tester"));
 
 // app.get("/index", function(req, res) {
