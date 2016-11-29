@@ -71,13 +71,22 @@ PlayerPool.prototype.containsSocket = function(ws) {
 };
 
 PlayerPool.prototype.getPlayerIds = function() {
-  console.log("Get player ids");
-  console.log("Size: " + this.playerPool.length);
   var returnArray = [];
   for(var i=0;i<this.playerPool.length;i++) {
     returnArray.push(this.playerPool[i].getId());
   }
   return returnArray;
+};
+
+PlayerPool.prototype.sendMessage = function(playerId, message) {
+  for(var i=0;i<this.playerPool.length;i++) {
+    if(this.playerPool[i] === playerId) {
+      this.playerPool[i].sendMessage(message);
+      return;
+    }
+  }
+
+  throw new Error(Err.PLAYER_ID_DNE);
 };
 
 PlayerPool.prototype.broadcast = function(message) {
