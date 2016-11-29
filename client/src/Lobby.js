@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import RaisedButton from 'material-ui/RaisedButton';
+import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
-import {Card, CardText} from 'material-ui/Card';
+import {Card, CardHeader, CardActions, CardText} from 'material-ui/Card';
 
 import './Lobby.css';
 
@@ -10,18 +10,20 @@ class Lobby extends Component {
     return (
       <div className="Lobby">
         <Card>
+          <CardHeader
+            title="Telephone Pictionary"
+            subtitle="Create or join a game"
+            style={{"width": "60vw"}}
+          />
           <CardText>
             <TextField
               hintText="Your Name"
             />
-            <TextField
-              hintText="Game ID"
-            /><br />
-
-            <RaisedButton label="Create Game" />
-            <RaisedButton label="Join Game" />
-            <RaisedButton label="Start Game" />
           </CardText>
+          <CardActions>
+            <FlatButton label="Create Game" />
+            <FlatButton label="Join Game" />
+          </CardActions>
         </Card>
       </div>
     )
