@@ -1,5 +1,10 @@
 var ws = undefined;
 
+$(document).ready(function() {
+  $("#player-id").val(generateRandomName());
+});
+
+
 function createGame() {
   return new Promise(function(resolve,reject) {
     $.get('http://localhost:3001/api/createroom').then(function(data){
@@ -105,4 +110,13 @@ function startGame() {
       gameId: gameId
     }
   }));
+}
+
+function generateRandomName() {
+  var num = Math.floor((Math.random() * 1000) + 1);
+  var nameSelector = Math.floor((Math.random()*10));
+  var names = ['wes', 'sarah', 'kevin', 'jason', 'bernard', 'ruby', 'nadine', 'clement',
+              'hannah', 'gilia'];
+  var name = names[nameSelector]+"_"+String(num);
+  return name;
 }
