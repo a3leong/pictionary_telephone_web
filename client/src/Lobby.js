@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
 import {Card, CardHeader, CardActions, CardText} from 'material-ui/Card';
@@ -34,13 +35,18 @@ const last = [
 class Lobby extends Component {
   constructor(props) {
     super(props);
-    const randy = Math.floor((Math.random() * last.length));
-    const bottle = Math.floor((Math.random() * names.length));
+    const randy = Math.floor(Math.random() * last.length);
+    const bottle = Math.floor(Math.random() * names.length);
     const selected = names[bottle] + " " + last[randy];
     
     this.state = {
       name: selected,
+      open: false,
     };
+  }
+
+  componentDidMount() {
+    this.socketize();
   }
 
   create() {
@@ -53,26 +59,75 @@ class Lobby extends Component {
       this.setState({
         id: response
       })
-      this.game(response);
+
+      this.join();
     });
   }
 
-  game(id) {
+  socketize() {
     this.ws = new WebSocket("ws://" + window.location.hostname + ":" + Config.BACKEND_PORT);
     this.ws.onopen = this.join.bind(this);
+    this.ws.onmessage = this.handle.bind(this);
   }
 
   join() {
-    this.ws.send(JSON.stringify({
-      type: Types.JOIN_GAME_INSTANCE,
-      data: {
-        gameId: this.state.id,
-        playerId: this.state.name,
+    if (this.state.id != null) {
+      this.ws.send(JSON.stringify({
+        type: Types.JOIN_GAME_INSTANCE,
+        data: {
+          gameId: this.state.id,
+          playerId: this.state.name,
+        }
+      }));
+    }
+
+    this.handleClose();
+  }
+
+  handle(ev) {
+    console.log(ev);
+    try {
+      let msg = JSON.parse(ev.data);
+      switch (msg.type) {
+        case "config":
+          console.log(msg.data.playerIds);
+          break;
+        default:
+          console.log("unhandled");
+          console.log(msg);
+          break;
       }
-    }));
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  handleOpen() {
+    this.setState({open: true});
+  }
+
+  handleClose() {
+    this.setState({open: false});
+  }
+
+  handleChange(ev) {
+    this.setState({id: ev.target.value});
   }
 
   render() {
+    const actions = [
+      <FlatButton
+        label="Cancel"
+        primary={true}
+        onTouchTap={this.handleClose.bind(this)}
+      />,
+      <FlatButton
+        label="Go"
+        primary={true}
+        onTouchTap={this.join.bind(this)}
+      />,
+    ];
+
     return (
       <div className="Lobby">
         <Card>
@@ -90,11 +145,12 @@ class Lobby extends Component {
           <CardActions>
             <FlatButton 
               disabled={this.state.id != null}
-              onClick={this.create.bind(this)}
+              onTouchTap={this.create.bind(this)}
               label="Create Game"
             />
             <FlatButton 
               disabled={this.state.id != null}
+              onTouchTap={this.handleOpen.bind(this)}
               label="Join Game" 
             />
           </CardActions>
@@ -110,6 +166,20 @@ class Lobby extends Component {
             </CardText> 
           </Card>
         }
+
+        <Dialog
+          title="Join existing game"
+          actions={actions}
+          modal={false}
+          open={this.state.open}
+          onRequestClose={this.handleClose.bind(this)}
+        >
+          <p>Pass an ID to join an existing game!</p>
+          <TextField
+            hintText="Game ID"
+            onChange={this.handleChange.bind(this)}
+          />
+        </Dialog>
       </div>
     )
   }
