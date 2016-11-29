@@ -72,14 +72,14 @@ class Lobby extends Component {
         </Card>
 
         {this.state.id != null &&
-            <Card>
-              <CardHeader
-                title="Lobby Status"
-                subtitle={"ID: " + this.state.id}
-              />
-              <CardText>
-              </CardText> 
-            </Card>
+          <Card>
+            <CardHeader
+              title="Lobby Status"
+              subtitle={"ID: " + this.state.id}
+            />
+            <CardText>
+            </CardText> 
+          </Card>
         }
       </div>
     )
