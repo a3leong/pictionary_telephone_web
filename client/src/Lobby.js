@@ -18,12 +18,25 @@ const names = [
   'Gilia',
 ];
 
+const last = [
+  'Lau',
+  'Chang',
+  'Lee',
+  'Lu',
+  'Chen',
+  'Nguyen',
+  'Fong',
+  'Ng',
+  'Wu',
+  'Tam',
+];
+
 class Lobby extends Component {
   constructor(props) {
     super(props);
-    const randy = Math.floor((Math.random() * 1000) + 1);
+    const randy = Math.floor((Math.random() * last.length));
     const bottle = Math.floor((Math.random() * names.length));
-    const selected = names[bottle] + "x" + randy;
+    const selected = names[bottle] + " " + last[randy];
     
     this.state = {
       name: selected,
