@@ -3,7 +3,7 @@
 
 // Server to client:
 {
-    type: 'config' | 'timer' | 'error' | 'gamestatus' | 'playerBook',        // String value containing type of message expected
+    type: 'config' | 'timer' | 'error' | 'gamestatus' | 'playerBook' | 'requestPage',        // String value containing type of message expected
     data: {}  // Data object depends on context
 }
 
@@ -45,6 +45,11 @@ timer:    // Sends time left in round data
 error:
 {
     errmsg: "error_msg"
+}
+
+requestPage:  // Ask client for picture url or phrase data
+{
+    
 }
 
 // Client to Server:
