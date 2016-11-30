@@ -4,33 +4,9 @@
 [api2](#json-spec)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # api
-## createroom - 
+## createroom: /api/createroom
+
 
 
 
