@@ -1,8 +1,9 @@
 [API](#api)
+[api2](#jsonspec)
 # api
 ## createroom - 
 
 
 
 
-# JSON Spec
+# json spec
