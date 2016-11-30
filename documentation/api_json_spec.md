@@ -1,5 +1,6 @@
 # REST API
 ### Create Room: /api/createroom
+####Description
 GET http request which creates a room and returns a string id to the room.
 
 # JSON Messages
