@@ -3,7 +3,7 @@
 
 // Server to client:
 {
-    type: 'config' | 'timer' | 'error' | 'gamestatus' | 'playerBook' | 'requestPage',        // String value containing type of message expected
+    type: 'config' | 'timer' | 'error' | 'gamestatus' | 'playerBook',        // String value containing type of message expected
     data: {}  // Data object depends on context
 }
 
@@ -54,18 +54,13 @@ requestPage:  // Ask client for picture url or phrase data
 
 // Client to Server:
 {
-    type: 'createGameInstance' | 'joinGameInstance' | 'kickPlayer' | 'startGameInstance' \  // String value containing type of message expected
+    type: 'joinGameInstance' | 'kickPlayer' | 'startGameInstance' \  // String value containing type of message expected
           | 'phraseDataSend' | 'drawDataSend' | 'updateConfigOption',             
     data: { }  // Data object depends on context
 }
 
 
 // Data object based on type
-createGameInstance:
-{
-    playerId: 'player_id'     // Nickname used by player
-}
-
 joinGameInstance:
 {
     gameId: 'game_id',
