@@ -1,5 +1,34 @@
 [API](#api)
-[api2](#jsonspec)
+
+
+[api2](#json-spec)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # api
 ## createroom - 
 
