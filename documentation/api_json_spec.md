@@ -1,14 +1,115 @@
 [API](#api)
 
 
-[api2](#json-spec)
+[api2](#Server-to-Client-JSON)
 
 
 # api
-## createroom: /api/createroom
+### Create Room: /api/createroom
+GET http request which creates a room and returns a string id to the room.
+
+# Server to Client JSON
 
 
+// Server to client:
+{
+    type: 'config' | 'timer' | 'error' | 'gamestatus' | 'playerBook' | 'requestPage',        // String value containing type of message expected
+    data: {}  // Data object depends on context
+}
 
 
+// Data object based on type
+config:   // Used to send config data, resends to all players everytime config data is updated
+{
+    gameId: this.gameId,
+    playerCount: this.getPlayerCount(),
+    playerIds: this.getPlayerIds(),
+    phraseRoundTime: this.phraseRoundTime
+    drawRoundTime: this.drawRoundTime,
+}
 
-# json spec
+
+// Used to tell client to load a particular view
+// We could also potentially send roundNumber/totalRounds here if that would be helpful info for players
+gamestatus:
+{
+    status: 'firstPhrase' | 'phrase' | 'draw' | 'end' | 'expectData',  // expectData means waiting for clients to send canvas/word data
+    bookId: "book_id"   // Only for draw/phase gamestatus
+    data: 'some_string' // Either phrase or base64URL depending on round (phrase on draw round, URL on draw)
+    currentRound: 1, // Optional
+    totalRounds:  5  // Optional
+}
+
+// Players resulting set of images/phrases created from their phrase
+playerBook:
+{
+    playerId: "player_id",
+    book: // TODO: figure out format for this
+}
+
+timer:    // Sends time left in round data
+{
+    timeLeft: 30 // Time left in seconds
+}
+
+error:
+{
+    errmsg: "error_msg"
+}
+
+requestPage:  // Ask client for picture url or phrase data
+{
+    
+}
+
+// Client to Server:
+{
+    type: 'createGameInstance' | 'joinGameInstance' | 'kickPlayer' | 'startGameInstance' \  // String value containing type of message expected
+          | 'phraseDataSend' | 'drawDataSend' | 'updateConfigOption',             
+    data: { }  // Data object depends on context
+}
+
+
+// Data object based on type
+createGameInstance:
+{
+    playerId: 'player_id'     // Nickname used by player
+}
+
+joinGameInstance:
+{
+    gameId: 'game_id',
+    playerId: 'player_id'
+}
+
+kickPlayer:
+{
+    gameId: 'game_id',
+    playerId: 'player_id'
+}
+
+startGameInstance:
+{
+    gameId: 'game_id'
+}
+
+phraseDataSend:
+{
+    gameId: 'game_id',
+    bookId: 'book_id', // The player id of the book owner
+    phrase: 'string'
+}
+
+drawDataSend:
+{
+    gameId: 'game_id',
+    bookId: 'book_id', // The player id of the book owner
+    canvas: 'base64_url_encode_canvas_data'
+}
+
+updateConfigOption:
+{
+    gameId: 'game_id',
+    drawRoundTime: 30,   // Any int
+    phraseRoundTime: 10  // Any int
+}
