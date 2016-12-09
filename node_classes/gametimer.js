@@ -1,12 +1,12 @@
+var MsgGen = require('./messagegenerator')
+
+
 function GameTimer(socketPool) {
   this.socketPool = socketPool;
 }
 
 GameTimer.prototype.sendRemainingTime = function(remainingTime) {
-  this.socketPool.broadcast(JSON.stringify({
-        type: 'timer',
-        data: { timeLeft: remainingTime }
-  }));
+  this.socketPool.broadcast(MsgGen.generateTimerMsg(remainingTime));
 };
 
 GameTimer.prototype.timerCallback = function(timeInSeconds, callback, context, broadcast=true) {

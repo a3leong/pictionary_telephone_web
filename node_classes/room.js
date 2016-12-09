@@ -1,6 +1,7 @@
 var Config = require('../config');
 // var Player = require('./player');
 var PlayerPool = require('./playerpool');
+var MsgGen = require('./messagegenerator');
 var Err = require('./errmsg');
 var Validator = require('validator');
 
@@ -49,9 +50,8 @@ Room.prototype.setDrawTime = function(dTime) {
 
 // Throw error on existing
 Room.prototype.addPlayer = function(playerId, ws) {
-  console.log("Add player");
   this.playerPool.addPlayer(playerId, ws);
-  this.playerPool.broadcast(JSON.stringify(this.getConfig()));
+  this.playerPool.broadcast(MsgGen.generateConfigMsg(this.getConfig()));
 };
 
 Room.prototype.closeSockets = function() {
@@ -60,7 +60,7 @@ Room.prototype.closeSockets = function() {
 
 Room.prototype.removePlayer = function(playerId) {
   this.playerPool.removePlayer(playerId);
-  this.playerPool.broadcast(JSON.stringify(this.getConfig()));
+  this.playerPool.broadcast(MsgGen.generateConfigMsg(this.getConfig()));
 };
 
 Room.prototype.containsPlayer = function(playerId) {

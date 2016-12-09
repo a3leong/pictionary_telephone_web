@@ -1,5 +1,6 @@
 var GameTimer = require('./gametimer');
 var Book = require('./book');
+var MsgGen = require('./messagegenerator')
 var Err = require('./errmsg');
 
 function Game(id, playerPool, phraseTime, drawTime) {
@@ -45,15 +46,7 @@ Game.prototype.isGameOver = function() {
 };
 
 Game.prototype.startGame = function() {
-  this.playerPool.broadcast(JSON.stringify({
-    type: 'gamestatus',
-    data: {
-      status: 'firstPhrase',
-      bookId: 'book_id',
-      data: 'some_string',
-    }
-  }));
-
+  this.playerPool.broadcast(MsgGen.generateGamestatusMsg('firstPhrase', undefined, undefined));
   this.gameTimer.timerCallback(this.phraseTime, this.endRound, this.context);
 };
 
@@ -85,7 +78,7 @@ Game.prototype.storePhraseDataAndStartRound = function(bookId, phrase) {
     throw new Error(Err.WRONG_DATA_SEND);
   }
   
-  // Store data and start next round
+  // Store data and start next round if needed
   if(++this.dataCollectionCount === this.playerPool.getSize()){
     this.dataCollectionCount = 0;
     this.startRound();
@@ -94,12 +87,24 @@ Game.prototype.storePhraseDataAndStartRound = function(bookId, phrase) {
 
 Game.prototype.storeDrawDataAndStartRound = function(bookId, canvas) {
   // Store data and start next round
+  if(this.roundInProgress) {
+    throw new Error(Err.ROUND_IN_PROGRESS);
+  }
+  if(this.currentRound%2 !== 1) {
+    throw new Error(Err.WRONG_DATA_SEND);
+  }
 
-  this.startRound();
+  // Store data and start next round if needed
+  if(++this.dataCollectionCount === this.playerPool.getSize()){
+    this.dataCollectionCount = 0;
+    this.startRound();
+  }
 };
 
 Game.prototype.endRound = function(context) {
   context.roundInProgress = false; // Will need to use context for callback
+  // Send some message requesting data
+  context.playerPool.broadcast(MsgGen.generateGamestatusMsg('expectData', undefined, undefined));
 };
 
 module.exports = Game;
