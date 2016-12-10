@@ -58,6 +58,9 @@ Game.prototype.startRound = function() {
   this.roundInProgress = true;
   if(isGameOver()) {
     this.endGame();
+  } else if(this.currentRound===0) {
+    this.playerPool.broadcast(MsgGen.generateGamestatusMsg('firstPhrase', undefined, undefined));
+    this.gameTimer.timerCallback(this.phraseTime, this.endRound, this.context);
   } else if(this.currentRound%2===0) {
     // Do phrase round
     this.gameTimer.timerCallback(this.phraseTime, this.endRound, this.context);
@@ -65,8 +68,6 @@ Game.prototype.startRound = function() {
     // Do draw round
     this.gameTimer.timerCallback(this.drawTime, this.endRound, this.context);
   }
-  // TODO make sure startround cannot be invoked before timer ends
-
   currentRound++;
 };
 
@@ -105,6 +106,22 @@ Game.prototype.endRound = function(context) {
   context.roundInProgress = false; // Will need to use context for callback
   // Send some message requesting data
   context.playerPool.broadcast(MsgGen.generateGamestatusMsg('expectData', undefined, undefined));
+};
+
+Game.prototype.sendRoundData = function(typeName) {
+  var bookIds = this.playerPool.getPlayerIds();
+  var numPlayers = this.playerPool.getSize();
+  var roundType = this.currentRound%2===0 ? 'phrase' : 'draw';
+  // Sends round data with appropriate bookid
+  for(var i=0;i<numPlayers;i++) {
+    var bookId = bookIds[(numPlayers+currentRound)%numPlayers];
+    var data = this.currentRound%2===0 ? this.books[bookId].getNewestPhrase() : this.books[bookId].getNewestCanvas();
+    this.playerPool.playerPool[i].sendMessage(MsgGen.generateGamestatusMsg(
+                                               roundType, 
+                                               bookId,
+                                               data
+                                             ));
+  }
 };
 
 module.exports = Game;

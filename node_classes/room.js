@@ -21,6 +21,8 @@ Room.prototype.getPlayerIds = function() {
   return this.playerPool.getPlayerIds();
 };
 
+
+// To be deprecated
 Room.prototype.getConfig = function() {
   return {
     type: 'config',
@@ -51,7 +53,8 @@ Room.prototype.setDrawTime = function(dTime) {
 // Throw error on existing
 Room.prototype.addPlayer = function(playerId, ws) {
   this.playerPool.addPlayer(playerId, ws);
-  this.playerPool.broadcast(MsgGen.generateConfigMsg(this.getConfig()));
+  this.playerPool.broadcast(MsgGen.generateConfigMsg(this.id, this.playerPool.getSize(),
+                            this.playerPool.getPlayerIds(), this.phraseTime, this.drawTime));
 };
 
 Room.prototype.closeSockets = function() {
@@ -60,7 +63,8 @@ Room.prototype.closeSockets = function() {
 
 Room.prototype.removePlayer = function(playerId) {
   this.playerPool.removePlayer(playerId);
-  this.playerPool.broadcast(MsgGen.generateConfigMsg(this.getConfig()));
+  this.playerPool.broadcast(MsgGen.generateConfigMsg(this.id, this.playerPool.getSize(),
+                            this.playerPool.getPlayerIds(), this.phraseTime, this.drawTime));
 };
 
 Room.prototype.containsPlayer = function(playerId) {

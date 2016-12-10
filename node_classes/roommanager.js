@@ -14,6 +14,7 @@ RoomManager.prototype.getPlayerPool = function(roomId) {
   return this.roomDictionary[roomId].playerPool;
 };
 
+// To be deprecated
 RoomManager.prototype.getConfig = function(roomId) {
   if(!this.roomDictionary[roomId]) {
     throw new Error(Err.ROOM_DNE);

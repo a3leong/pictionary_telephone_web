@@ -120,3 +120,26 @@ function generateRandomName() {
   var name = names[nameSelector]+"_"+String(num);
   return name;
 }
+
+
+function testCanvas() {
+  ws = new WebSocket("ws://localhost:3001");
+  ws.onopen = function() {
+    ws.send(JSON.stringify({type: 'testCanvasRecieve'}));
+  };
+  ws.onmessage = function(event) {
+    console.log("event");
+    console.log(event.data);
+    if(event.data!=='Connection set') {
+      var obj = JSON.parse(event.data);
+      var data = obj.data;
+      var myCanvas = document.getElementById('test-canvas');
+      var ctx = myCanvas.getContext('2d');
+      var img = new Image;
+      img.onload = function(){
+        ctx.drawImage(img,0,0); // Or at whatever offset you like
+      };
+      img.src = data;
+    }
+  };
+}

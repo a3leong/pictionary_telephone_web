@@ -1,10 +1,19 @@
 // Use this to resolve redundant typing and code smell
 module.exports = {
-  generateConfigMsg: function(config) {
-    return JSON.stringify(config);
+  generateConfigMsg: function(gameId, playerCount, playerIds, phraseTime, drawTime){
+    return JSON.stringify({
+      type: 'config',
+      data: {
+        gameId: gameId,
+        playerCount: playerCount,
+        playerIds: playerIds,
+        phraseRoundTime: phraseTime,
+        drawRoundTime: drawTime
+      }
+    });
   },
 
-  generateGamestatusMsg: function(status, bookId, data){
+  generateGameStatusMsg: function(status, bookId, data){
     return JSON.stringify({
       type: 'gamestatus',
       data: {
