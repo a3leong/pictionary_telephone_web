@@ -33,7 +33,7 @@ Sent by a lobby/room whenever anything is modified. Broadcasted to all players.
 Sent by a game instance whenever it is necessary to let the client know when to change states or send information.
 #### Fields
 - status: 'firstPhrase' | 'phrase' | 'draw' | 'end' | 'expectData' (expectData means waiting for clients to send canvas/word data)
-- bookId: The book id the user is adding a page to (owner of the book is the book's id) NOTE: May become deprecated since mgith not be necessary
+- bookId: The book id the user is adding a page to (owner of the book is the book's id)
 - data: Data from last added page of the bookId given. Either a string phrase or base64URL depending on phrase or draw round
 - currentRound: Optional
 - totalRounds: Optional
