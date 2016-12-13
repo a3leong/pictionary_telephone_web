@@ -38,7 +38,7 @@ MessageHandler.prototype.handleMessage = function(message, wsSender) {
       this.removePlayerFromRoom(data.gameId, data.playerId);
     case 'updateConfigOption':
       console.log("Update config");
-      // this.updateRoomConfig(data.gameId, data.drawRoundTime, data.phraseRoundTime);
+      this.updateRoomConfig(data.gameId, data.drawRoundTime, data.phraseRoundTime);
       break;
     case 'startGameInstance':
       console.log("Start game instance");
@@ -46,11 +46,11 @@ MessageHandler.prototype.handleMessage = function(message, wsSender) {
       break;
     case 'phraseDataSend':
       console.log("Phrase data send");
-      // this.storePhraseData(data.gameId, data.bookId, data.phrase);
+      this.storePhraseData(data.gameId, data.bookId, data.phrase);
       break;
     case 'drawDataSend':
       console.log("draw data send");
-      // this.storeDrawData(data.gameId, data.bookId, data.canvas);
+      this.storeDrawData(data.gameId, data.bookId, data.canvas);
     default:
       throw new Error(Err.NO_SUCH_MESSAGE_TYPE);
   }
