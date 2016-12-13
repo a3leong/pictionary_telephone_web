@@ -5,6 +5,7 @@ import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
 import {Card, CardHeader, CardActions, CardText} from 'material-ui/Card';
 import {Config, Types} from './config';
+import DrawBoard from './DrawBoard.js';
 import './Lobby.css';
 
 const names = [
@@ -42,6 +43,7 @@ class Lobby extends Component {
     
     this.state = {
       name: selected,
+      active: false,
       open: false,
       players: [],
     };
@@ -94,8 +96,17 @@ class Lobby extends Component {
         case "config":
           console.log(msg.data.playerIds);
           this.setState({
-            players: msg.data.playerIds
+            players: msg.data.playerIds,
           });
+          break;
+        case "gamestatus":
+          console.log(msg.data.status);
+          this.setState({
+            active: true,
+          });
+          break;
+        case "expectdata":
+          console.log("expected data");
           break;
         default:
           console.log("unhandled");
@@ -146,52 +157,55 @@ class Lobby extends Component {
 
     return (
       <div className="Lobby">
-        <Card>
-          <CardHeader
-            title="Telephone Pictionary"
-            subtitle="Create or join a game"
-            style={{"width": "40vw"}}
-          />
-          <CardText>
-            <TextField
-              hintText="Your Name"
-              defaultValue={this.state.name}
-            />
-          </CardText>
-          <CardActions>
-            <FlatButton 
-              disabled={this.state.id != null}
-              onTouchTap={this.create.bind(this)}
-              label="Create Game"
-            />
-            <FlatButton 
-              disabled={this.state.id != null}
-              onTouchTap={this.handleOpen.bind(this)}
-              label="Join Game" 
-            />
-          </CardActions>
-        </Card>
+        {!this.state.active ?
+            (<Card>
+              <CardHeader
+                title="Telephone Pictionary"
+                subtitle="Create or join a game"
+                style={{"width": "40vw"}}
+              />
+              <CardText>
+                <TextField
+                  hintText="Your Name"
+                  defaultValue={this.state.name}
+                />
+              </CardText>
+              <CardActions>
+                <FlatButton 
+                  disabled={this.state.id != null}
+                  onTouchTap={this.create.bind(this)}
+                  label="Create Game"
+                />
+                <FlatButton 
+                  disabled={this.state.id != null}
+                  onTouchTap={this.handleOpen.bind(this)}
+                  label="Join Game" 
+                />
+              </CardActions>
+            </Card>) :
+            (<DrawBoard />)
+        }
 
         {this.state.id != null &&
-          (<Card>
-            <CardHeader
-              title="Lobby Status"
-              subtitle={"ID: " + this.state.id}
-            />
-            <CardText>
-              Players:
-              <List>
-                {this.state.players.map(player => {
-                  return <ListItem key={player} primaryText={player} />;
-                })}
-              </List>
-              <FlatButton 
-                disabled={this.state.players.length < 2}
-                onTouchTap={this.start.bind(this)}
-                label="Start Game" 
+            (<Card>
+              <CardHeader
+                title="Lobby Status"
+                subtitle={"ID: " + this.state.id}
               />
-            </CardText> 
-          </Card>)
+              <CardText>
+                Players:
+                <List>
+                  {this.state.players.map(player => {
+                    return <ListItem key={player} primaryText={player} />;
+                  })}
+                </List>
+                <FlatButton 
+                  disabled={this.state.players.length < 2}
+                  onTouchTap={this.start.bind(this)}
+                  label="Start Game" 
+                />
+              </CardText> 
+            </Card>)
         }
 
         <Dialog
