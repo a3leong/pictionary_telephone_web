@@ -45,6 +45,7 @@ class Lobby extends Component {
       name: selected,
       active: false,
       open: false,
+      time: 0,
       players: [],
     };
   }
@@ -89,7 +90,6 @@ class Lobby extends Component {
   }
 
   handle(ev) {
-    console.log(ev);
     try {
       let msg = JSON.parse(ev.data);
       switch (msg.type) {
@@ -100,13 +100,18 @@ class Lobby extends Component {
           });
           break;
         case "gamestatus":
-          console.log(msg.data.status);
-          this.setState({
-            active: true,
-          });
+          if (msg.data.status === 'firstPhrase') {
+            this.setState({
+              active: true,
+            });
+          } else if (msg.data.status === 'expectData') {
+            console.log('data expected');
+          }
           break;
-        case "expectdata":
-          console.log("expected data");
+        case "timer":
+          this.setState({
+            time: msg.data.timeLeft,
+          });
           break;
         default:
           console.log("unhandled");
@@ -183,7 +188,13 @@ class Lobby extends Component {
                 />
               </CardActions>
             </Card>) :
-            (<DrawBoard />)
+            (<div>
+              Time left: {this.state.time}
+              <DrawBoard
+                gameId={this.state.id}
+                ws={this.ws}
+              />
+            </div>)
         }
 
         {this.state.id != null &&

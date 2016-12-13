@@ -1,6 +1,7 @@
 import React from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 import {Card} from 'material-ui/Card';
+import {Types} from './config';
 
 import './DrawBoard.css';
 
@@ -117,6 +118,11 @@ class DrawBoard extends React.Component {
 
   submit() {
     window.open(this.canvas.toDataURL());
+    this.props.ws.send(JSON.stringify({
+      type: Types.SEND_PHRASE_DATA,
+      gameId: this.props.gameId,
+      phrase: this.canvas.toDataURL(),
+    }));
   }
 
   render() {
