@@ -119,6 +119,17 @@ class Lobby extends Component {
     this.setState({id: ev.target.value});
   }
 
+  start() {
+    if (this.state.id != null) {
+      this.ws.send(JSON.stringify({
+        type: Types.START_GAME_INSTANCE,
+        data: {
+          gameId: this.state.id,
+        }
+      }));
+    }
+  }
+
   render() {
     const actions = [
       <FlatButton
@@ -174,6 +185,11 @@ class Lobby extends Component {
                   return <ListItem key={player} primaryText={player} />;
                 })}
               </List>
+              <FlatButton 
+                disabled={this.state.players.length < 2}
+                onTouchTap={this.start.bind(this)}
+                label="Start Game" 
+              />
             </CardText> 
           </Card>)
         }
