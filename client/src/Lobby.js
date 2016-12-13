@@ -5,6 +5,7 @@ import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
 import {Card, CardHeader, CardActions, CardText} from 'material-ui/Card';
 import {Config, Types} from './config';
+import DrawBoard from './DrawBoard.js';
 import './Lobby.css';
 
 const names = [
@@ -42,7 +43,9 @@ class Lobby extends Component {
     
     this.state = {
       name: selected,
+      active: false,
       open: false,
+      time: 0,
       players: [],
     };
   }
@@ -87,14 +90,27 @@ class Lobby extends Component {
   }
 
   handle(ev) {
-    console.log(ev);
     try {
       let msg = JSON.parse(ev.data);
       switch (msg.type) {
         case "config":
           console.log(msg.data.playerIds);
           this.setState({
-            players: msg.data.playerIds
+            players: msg.data.playerIds,
+          });
+          break;
+        case "gamestatus":
+          if (msg.data.status === 'firstPhrase') {
+            this.setState({
+              active: true,
+            });
+          } else if (msg.data.status === 'expectData') {
+            console.log('data expected');
+          }
+          break;
+        case "timer":
+          this.setState({
+            time: msg.data.timeLeft,
           });
           break;
         default:
@@ -119,6 +135,17 @@ class Lobby extends Component {
     this.setState({id: ev.target.value});
   }
 
+  start() {
+    if (this.state.id != null) {
+      this.ws.send(JSON.stringify({
+        type: Types.START_GAME_INSTANCE,
+        data: {
+          gameId: this.state.id,
+        }
+      }));
+    }
+  }
+
   render() {
     const actions = [
       <FlatButton
@@ -135,47 +162,61 @@ class Lobby extends Component {
 
     return (
       <div className="Lobby">
-        <Card>
-          <CardHeader
-            title="Telephone Pictionary"
-            subtitle="Create or join a game"
-            style={{"width": "40vw"}}
-          />
-          <CardText>
-            <TextField
-              hintText="Your Name"
-              defaultValue={this.state.name}
-            />
-          </CardText>
-          <CardActions>
-            <FlatButton 
-              disabled={this.state.id != null}
-              onTouchTap={this.create.bind(this)}
-              label="Create Game"
-            />
-            <FlatButton 
-              disabled={this.state.id != null}
-              onTouchTap={this.handleOpen.bind(this)}
-              label="Join Game" 
-            />
-          </CardActions>
-        </Card>
+        {!this.state.active ?
+            (<Card>
+              <CardHeader
+                title="Telephone Pictionary"
+                subtitle="Create or join a game"
+                style={{"width": "40vw"}}
+              />
+              <CardText>
+                <TextField
+                  hintText="Your Name"
+                  defaultValue={this.state.name}
+                />
+              </CardText>
+              <CardActions>
+                <FlatButton 
+                  disabled={this.state.id != null}
+                  onTouchTap={this.create.bind(this)}
+                  label="Create Game"
+                />
+                <FlatButton 
+                  disabled={this.state.id != null}
+                  onTouchTap={this.handleOpen.bind(this)}
+                  label="Join Game" 
+                />
+              </CardActions>
+            </Card>) :
+            (<div>
+              Time left: {this.state.time}
+              <DrawBoard
+                gameId={this.state.id}
+                ws={this.ws}
+              />
+            </div>)
+        }
 
         {this.state.id != null &&
-          (<Card>
-            <CardHeader
-              title="Lobby Status"
-              subtitle={"ID: " + this.state.id}
-            />
-            <CardText>
-              Players:
-              <List>
-                {this.state.players.map(player => {
-                  return <ListItem key={player} primaryText={player} />;
-                })}
-              </List>
-            </CardText> 
-          </Card>)
+            (<Card>
+              <CardHeader
+                title="Lobby Status"
+                subtitle={"ID: " + this.state.id}
+              />
+              <CardText>
+                Players:
+                <List>
+                  {this.state.players.map(player => {
+                    return <ListItem key={player} primaryText={player} />;
+                  })}
+                </List>
+                <FlatButton 
+                  disabled={this.state.players.length < 2}
+                  onTouchTap={this.start.bind(this)}
+                  label="Start Game" 
+                />
+              </CardText> 
+            </Card>)
         }
 
         <Dialog
