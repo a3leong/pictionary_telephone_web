@@ -10,11 +10,17 @@ All javascript objects are stringified and parsed using JavaScript's JSON standa
 >{
     type: "type_string",
     data: {
+            field1: "value1",
+            field2: "value2",
+            etc.
           }
  }
 
-Type: The string value of the message to be receieved which should be used to determine how to handle the message receieved.
-Data: A nested JSON object whose attributes depend on the type of message receieved.
+####type: 
+The string value of the message to be receieved which should be used to determine how to handle the message receieved.
+####data: 
+A nested JSON object whose attributes depend on the type of message receieved. For each message type, there are fields that
+are to be set as attributes of the data attribute (data is a nested object).
 
 The following information contains the type attribute along with a description and attributes for the data JSON object.
 
