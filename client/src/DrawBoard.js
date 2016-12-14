@@ -120,8 +120,11 @@ class DrawBoard extends React.Component {
     window.open(this.canvas.toDataURL());
     this.props.ws.send(JSON.stringify({
       type: Types.SEND_PHRASE_DATA,
-      gameId: this.props.gameId,
-      phrase: this.canvas.toDataURL(),
+      data: {
+        gameId: this.props.gameId,
+        bookId: this.props.bookId,
+        phrase: this.canvas.toDataURL()
+      }
     }));
   }
 

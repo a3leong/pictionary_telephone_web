@@ -15,11 +15,11 @@ GameTimer.prototype.timerCallback = function(timeInSeconds, callback, context, b
 
   var intervalId = setInterval(function(){
     console.log(remainingTime);
-    if(--remainingTime <= 0) {
+    if(--remainingTime < 0) {
       clearInterval(intervalId);
       callback(context);
     }
-    if(broadcast) { thisRef.sendRemainingTime(remainingTime); }
+    if(broadcast && remainingTime>=0) { thisRef.sendRemainingTime(remainingTime); }
     },1000);
 };
 

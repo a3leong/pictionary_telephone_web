@@ -15,7 +15,7 @@ function Game(id, playerPool, phraseTime, drawTime) {
   this.context = this;
   this.roundInProgress = false; // server-client synchronization
   this.gameStarted = false;     // server-client synchronization
-
+  console.log(this.playerPool.getPlayerIds());
   console.log("Game created: " + this.id + " phraseTime: " + this.drawTime);
 }
 
@@ -23,17 +23,11 @@ Game.prototype.closeSockets = function() {
   this.playerPool.closeSockets();
 };
 
-Game.prototype.start = function() {
-  // Start game
-  // Init books
-  this.initBooks();
-  this.startRound();
-};
-
 Game.prototype.initBooks = function() {
-  pids = playerPool.getPlayerIds();
-  for(var pid in pids) {
-    this.books[pid] = new Book();
+  var pids = this.playerPool.getPlayerIds();
+  for(var i=0;i<pids.length;i++) {
+    console.log("New book: " + pids[i]);
+    this.books[pids[i]] = new Book();
   }
 };
 
@@ -46,8 +40,8 @@ Game.prototype.isGameOver = function() {
 };
 
 Game.prototype.startGame = function() {
-  this.playerPool.broadcast(MsgGen.generateGamestatusMsg('firstPhrase', undefined, undefined));
-  this.gameTimer.timerCallback(this.phraseTime, this.endRound, this.context);
+  this.initBooks();
+  this.startRound();
 };
 
 Game.prototype.startRound = function() {
@@ -56,19 +50,21 @@ Game.prototype.startRound = function() {
   }
 
   this.roundInProgress = true;
-  if(isGameOver()) {
+  if(this.isGameOver()) {
     this.endGame();
   } else if(this.currentRound===0) {
-    this.playerPool.broadcast(MsgGen.generateGamestatusMsg('firstPhrase', undefined, undefined));
+    this.sendRoundData('firstPhrase', this.phraseTime);
     this.gameTimer.timerCallback(this.phraseTime, this.endRound, this.context);
   } else if(this.currentRound%2===0) {
     // Do phrase round
+    this.sendRoundData('phrase', this.phraseTime);
     this.gameTimer.timerCallback(this.phraseTime, this.endRound, this.context);
   } else {
     // Do draw round
+    this.sendRoundData('draw', this.drawTime);
     this.gameTimer.timerCallback(this.drawTime, this.endRound, this.context);
   }
-  currentRound++;
+  this.currentRound++;
 };
 
 Game.prototype.storePhraseDataAndStartRound = function(bookId, phrase) {
@@ -105,22 +101,29 @@ Game.prototype.storeDrawDataAndStartRound = function(bookId, canvas) {
 Game.prototype.endRound = function(context) {
   context.roundInProgress = false; // Will need to use context for callback
   // Send some message requesting data
-  context.playerPool.broadcast(MsgGen.generateGamestatusMsg('expectData', undefined, undefined));
+  context.playerPool.broadcast(MsgGen.generateGamestatusMsg('expectData', context.gameId, undefined, undefined));
 };
 
-Game.prototype.sendRoundData = function(typeName) {
+Game.prototype.sendRoundData = function(roundType, roundTime) {
   var bookIds = this.playerPool.getPlayerIds();
   var numPlayers = this.playerPool.getSize();
-  var roundType = this.currentRound%2===0 ? 'phrase' : 'draw';
   // Sends round data with appropriate bookid
   for(var i=0;i<numPlayers;i++) {
-    var bookId = bookIds[(numPlayers+currentRound)%numPlayers];
-    var data = this.currentRound%2===0 ? this.books[bookId].getNewestPhrase() : this.books[bookId].getNewestCanvas();
+    var bookId = bookIds[(numPlayers+this.currentRound)%numPlayers];
+    var data;
+    if(this.currentRound===0) {
+      data = null;
+    } else {
+      data = this.currentRound%2===0 ? this.books[bookId].getNewestPhrase() : this.books[bookId].getNewestCanvas();
+    }
     this.playerPool.playerPool[i].sendMessage(MsgGen.generateGamestatusMsg(
-                                               roundType, 
+                                               roundType,
+                                               this.id,
                                                bookId,
-                                               data
+                                               data,
+                                               roundTime
                                              ));
+    console.log("Send bookid: " + bookId);
   }
 };
 

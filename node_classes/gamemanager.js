@@ -63,12 +63,12 @@ GameManager.prototype.startGame = function(id) {
 //   this.gameDictionary[gameId].handleMessage(msg);
 // };
 
-GameManager.prototype.storePhraseData = function(gameId, phrase) {
+GameManager.prototype.storePhraseData = function(gameId, bookId, phrase) {
   if(!this.gameDictionary[gameId]) {
     throw new Error(Err.GAME_DNE); 
   }
 
-  this.gameDictionary[gameId].storePhraseData(phrase);
+  this.gameDictionary[gameId].storePhraseDataAndStartRound(phrase);
 };
 
 GameManager.prototype.storeDrawData = function(gameId, canvas) {
@@ -76,7 +76,7 @@ GameManager.prototype.storeDrawData = function(gameId, canvas) {
     throw new Error(Err.GAME_DNE);
   }
 
-  this.gameDictionary[gameId].storeDrawData(canvas);
+  this.gameDictionary[gameId].storeDrawDataAndStartRound(canvas);
 };
 
 GameManager.prototype.containsGame = function(id) {

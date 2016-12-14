@@ -91,6 +91,10 @@ class Lobby extends Component {
 
   handle(ev) {
     try {
+      if(ev.data==="Connection set") {
+        return;
+      }
+      console.log(ev);
       let msg = JSON.parse(ev.data);
       switch (msg.type) {
         case "config":
@@ -103,6 +107,9 @@ class Lobby extends Component {
           if (msg.data.status === 'firstPhrase') {
             this.setState({
               active: true,
+              id: msg.data.gameId,
+              bookId: msg.data.bookId,
+              time: msg.data.roundTime
             });
           } else if (msg.data.status === 'expectData') {
             console.log('data expected');
@@ -192,6 +199,7 @@ class Lobby extends Component {
               Time left: {this.state.time}
               <DrawBoard
                 gameId={this.state.id}
+                bookId={this.state.bookId}
                 ws={this.ws}
               />
             </div>)

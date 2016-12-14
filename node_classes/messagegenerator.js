@@ -13,13 +13,15 @@ module.exports = {
     });
   },
 
-  generateGameStatusMsg: function(status, bookId, data){
+  generateGamestatusMsg: function(status, gameId, bookId, data, roundTime){
     return JSON.stringify({
       type: 'gamestatus',
       data: {
         status: status,
+        gameId: gameId,
         bookId: bookId,
-        data: data
+        data: data,
+        roundTime: roundTime
       }
     });
   },
