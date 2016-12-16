@@ -31,6 +31,7 @@ Sent by a lobby/room whenever anything is modified. Broadcasted to all players.
 #### Fields
 - gameId: The id of the game, probably not needed but included anyway
 - playerCount: The number of players in the game
+- playerIds: An array containing the string value ids of all the players in the game
 - phraseRoundTime: The current set time given for players to type in a phrase
 - drawRoundTime: The current set time given for players to draw a phrase
 
