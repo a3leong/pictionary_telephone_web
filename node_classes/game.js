@@ -101,7 +101,7 @@ Game.prototype.storeDrawDataAndStartRound = function(bookId, canvas) {
 Game.prototype.endRound = function(context) {
   context.roundInProgress = false; // Will need to use context for callback
   // Send some message requesting data
-  context.playerPool.broadcast(MsgGen.generateGamestatusMsg('expectData', context.gameId, undefined, undefined));
+  context.playerPool.broadcast(MsgGen.generateGamestatusMsg('expectData', context.gameId, null, null));
 };
 
 Game.prototype.sendRoundData = function(roundType, roundTime) {
